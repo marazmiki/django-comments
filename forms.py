@@ -2,12 +2,9 @@
 
 from django import forms
 from django.utils.translation import ugettext as _
+from comments.models import Comment
 
-class CommentForm(forms.Form):
-    def save(self, *args, **kwargs):
-        class Mock(object):
-            def __init__(self, *args, **kwargs):
-                pass
-            def save(self, *args, **kwargs):
-                pass
-        return Mock()
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        exclude = ('date_created', 'date_changed', 'is_approved', 'parent', )
