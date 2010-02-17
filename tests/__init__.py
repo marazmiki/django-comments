@@ -1,0 +1,1 @@
+from comments.tests.view import *

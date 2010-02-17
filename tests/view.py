@@ -79,7 +79,7 @@ class CreateCommentTest(BaseCommentTest):
     def testPostNewCommentFail(self):
         data = self.get_valid_post_data()
         data.pop('content')
-        
+
         resp = self.client.post(self.url, data)
         cntx = resp.context
 
@@ -94,6 +94,6 @@ class ReplyCommentTest(BaseCommentTest):
     def get_view_name(self):
         return 'comments_reply'
 
-        
+
 
 
