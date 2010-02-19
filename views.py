@@ -44,7 +44,7 @@ def create(request, parent_id=None):
             comment = form.save(commit=False)
             comment.parent_comment = parent
             comment.content_object = object
-            comment.remote_addr    = request.META.get('REMOTE_ADDR', '')
+            comment.remote_addr    = request.META.get('REMOTE_ADDR')
             comment.forwarded_for  = request.META.get('HTTP_X_FORWARDRED_FOR')
             comment.save()
 
@@ -58,7 +58,7 @@ def create(request, parent_id=None):
                 return HttpResponse(simplejson.dumps(result))
 
             else:
-                return redirect('/')
+                return redirect('/') # TODO: correct redirect URL
 
         result.update(success=valid)
 

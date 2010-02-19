@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import simplejson
 from comments.forms import CommentForm
 from comments.models import Comment
+from comments.tests import get_commentable_object
 
 # --------------------------------------------------------------------------- #
 
@@ -31,7 +32,7 @@ class BaseCommentTest(TestCase):
 class CreateCommentTest(BaseCommentTest):
     def setUp(self):
         super(CreateCommentTest, self).setUp()
-        self.object = ContentType.objects.get(pk=1)
+        self.object = get_commentable_object()
 
     def get_valid_post_data(self):
         return dict(
