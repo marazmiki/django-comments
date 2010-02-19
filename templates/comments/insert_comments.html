@@ -1,2 +1,13 @@
-{% load i18n %}
-<h1>Insert comments for object {{ object }}</h1>
+{% load i18n comments_tags %}
+{% if comments_enabled %}
+    <h1>Insert comments for object {{ object }}</h1>
+    <form method="post" action="{% comments_form_action%}" id="new-comment">
+        <ul>
+            {{ form.as_ul }}
+            <li class="submit-publish"><input type="submit" value="{% trans "Publish" %}" /></li>
+            <li class="submit-preview"><input type="submit" value="{% trans "Preview" %}" name="_preview" /></li>
+        </ul>
+    </form>
+{% else %}
+    <h1>{% trans "Commenting is disabled" %}</h1>
+{% endif %}

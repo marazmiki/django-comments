@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.test import TestCase, client
+from django.core import urlresolvers
 from django.template import Template, Context, add_to_builtins, TemplateSyntaxError
-from comments.tests import get_commentable_object
+from comments.tests import get_commentable_object, create_comment
 
 # --------------------------------------------------------------------------- #
 
@@ -26,7 +27,7 @@ class BaseTestCase(TestCase):
 
 # --------------------------------------------------------------------------- #
 
-class CommentsTagTest(BaseTestCase):
+class InsertCommentsTagTest(BaseTestCase):
     def get_valid_tag_template(self):
         return '{% insert_comments for object %}'
 
@@ -41,24 +42,64 @@ class CommentsTagTest(BaseTestCase):
         self.tpl_context.update({'object': 'asdas'})
         self.assertEquals('', self.render())
 
-
     def testNodeWrongFirstArg(self):
         def do_wrong():
             self.tpl_string = '{% insert_comments f0r object %}'
             self.render()
-
         self.assertRaises(TemplateSyntaxError, do_wrong)
 
     def testNodeWrongNumberOfArgs(self):
         def do_wrong():
             self.tpl_string = '{% insert_comments for object something %}'
             self.render()
-
         self.assertRaises(TemplateSyntaxError, do_wrong)
 
     def testNodeWrongNumberOfArgs(self):
         def do_wrong():
             self.tpl_string = '{% insert_comments for object something %}'
             self.render()
+        self.assertRaises(TemplateSyntaxError, do_wrong)
 
+# --------------------------------------------------------------------------- #
+
+class CommentsFormActionTagTest(BaseTestCase):
+    def get_valid_tag_template(self):
+        return '{% comments_form_action %}'
+
+    def create_action(self):
+        return urlresolvers.reverse('comments_create')
+
+    def reply_action(self):
+        return urlresolvers.reverse('comments_reply',
+            kwargs = {
+                'parent_id': self.tpl_context['parent'].pk
+            }
+        )
+
+    def testCommentAddAsIs(self):
+        self.assertEquals(self.create_action(), self.render())
+
+    def testCommentAddForObject(self):
+        self.tpl_string = '{% comments_form_action for object %}'
+        self.assertEquals(self.create_action(), self.render())
+
+    def testCommentAddForObjectInEmptyReply(self):
+        self.tpl_string = '{% comments_form_action for object in reply to parent %}'
+        self.tpl_context.update(parent=None)
+        self.assertEquals(self.create_action(), self.render())
+
+    def testCommentReplyToParent(self):
+        self.tpl_string  = '{% comments_form_action in reply to parent %}'
+        self.tpl_context.update(parent=create_comment())
+        self.assertEquals(self.reply_action(), self.render())
+
+    def testCommentReplyForObject(self):
+        self.tpl_string = '{% comments_form_action for object in reply to parent %}'
+        self.tpl_context.update(parent=create_comment())
+        self.assertEquals(self.reply_action(), self.render())
+        
+    def testSyntaxErrorsWrongArgsNum(self):
+        def do_wrong():
+            self.tpl_string = '{% comments_form_action for %}'
+            self.render()
         self.assertRaises(TemplateSyntaxError, do_wrong)
