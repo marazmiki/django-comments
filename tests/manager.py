@@ -17,6 +17,14 @@ class CommentManagerTest(TestCase):
         self.assertTrue(isinstance(Comment.objects, CommentManager))
 
     def testGetForObject(self):
-        self.assertEquals(1, Comment.objects.get_for_object(self.object).count())
-        self.object
+        another_ctype_id = 2
+        another_object   = get_content_object(another_ctype_id)
+        comments_number  = 3
+
+        for i in xrange(comments_number):
+            create_comment(another_ctype_id)
+
+        self.assertEquals(1,                   Comment.objects.get_for_object(self.object).count())
+        self.assertEquals(comments_number,     Comment.objects.get_for_object(another_object).count())
+        self.assertEquals(comments_number + 1, Comment.objects.count())
         
