@@ -3,7 +3,7 @@
 from django.test import TestCase, client
 from django.core import urlresolvers
 from django.template import Template, Context, add_to_builtins, TemplateSyntaxError
-from comments.tests import get_commentable_object, create_comment
+from comments.tests import get_content_object, create_comment
 
 # --------------------------------------------------------------------------- #
 
@@ -15,7 +15,7 @@ add_to_builtins('comments.templatetags.comments_tags')
 class BaseTestCase(TestCase):
     def setUp(self):
         self.tpl_string  = self.get_valid_tag_template()
-        self.tpl_context = dict(object=get_commentable_object())
+        self.tpl_context = dict(object=get_content_object())
 
     def render(self):
         t = Template(self.tpl_string)

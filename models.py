@@ -4,6 +4,7 @@ from datetime import datetime
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes import generic
+from comments.managers import CommentManager
 
 class Comment(models.Model):
     content        = models.TextField()
@@ -19,6 +20,8 @@ class Comment(models.Model):
         ct_field   = 'content_type',
         fk_field   = 'object_pk',
     )
+
+    objects = CommentManager()
 
     def __unicode__(self):
         return self.content
