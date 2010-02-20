@@ -11,7 +11,12 @@ def create(request, parent_id=None):
     """
     Post a new comment
     """
-    parent = get_object_or_404(Comment, pk=parent_id) if parent_id else None
+
+    def get_parent():
+        """
+        Returns parent comment if reply required
+        """
+        return get_object_or_404(Comment, pk=parent_id) if parent_id else None
 
     def get_object():
         """
@@ -23,10 +28,17 @@ def create(request, parent_id=None):
         from django.contrib.contenttypes.models import ContentType
         return ContentType.objects.get(pk=1)
 
+    def get_form():
+        """
+        Creates form instance
+        """
+        return CommentForm(request.POST) if request.method == 'POST' else CommentForm()
+
+    parent = get_parent()
+    form   = get_form()
     result = dict()
 
     if request.method == 'POST':
-        form   = CommentForm(request.POST)
         valid  = form.is_valid()
         object = get_object()
 
@@ -51,9 +63,6 @@ def create(request, parent_id=None):
                 return redirect('/') # TODO: correct redirect URL
 
         result.update(success=valid)
-
-    else:
-        form = CommentForm()
 
     result.update(form=form)
 
