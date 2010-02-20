@@ -4,6 +4,7 @@ from django.test import TestCase, client
 from django.core import urlresolvers
 from django.template import Template, Context, add_to_builtins, TemplateSyntaxError
 from comments.tests import get_content_object, create_comment
+from comments.models import Comment
 
 # --------------------------------------------------------------------------- #
 
@@ -18,9 +19,9 @@ class BaseTestCase(TestCase):
         self.tpl_context = dict(object=get_content_object())
 
     def render(self):
-        t = Template(self.tpl_string)
-        c = Context(self.tpl_context)
-        return t.render(c)
+        self.t = Template(self.tpl_string)
+        self.c = Context(self.tpl_context)
+        return self.t.render(self.c)
 
     def get_valid_tag_template(self):
         raise NotImplementedError('Please implement this method in your suite')
@@ -101,5 +102,32 @@ class CommentsFormActionTagTest(BaseTestCase):
     def testSyntaxErrorsWrongArgsNum(self):
         def do_wrong():
             self.tpl_string = '{% comments_form_action for %}'
+            self.render()
+        self.assertRaises(TemplateSyntaxError, do_wrong)
+        
+# --------------------------------------------------------------------------- #
+
+class CommentsListTagTest(BaseTestCase):
+    def get_valid_tag_template(self):
+        return '{% get_comments_list for object as var %}'
+
+    def testSyntaxOk(self):
+        html = self.render()
+
+    def testSyntaxErrorsWrongArgsNum(self):
+        def do_wrong():
+            self.tpl_string = '{% get_comments_list blah %}'
+            self.render()
+        self.assertRaises(TemplateSyntaxError, do_wrong)
+
+    def testSyntaxErrorsSecondArgIsNotFor(self):
+        def do_wrong():
+            self.tpl_string = '{% get_comments_list for_ object as var %}'
+            self.render()
+        self.assertRaises(TemplateSyntaxError, do_wrong)
+
+    def testSyntaxErrorsThirdArgIsNotAs(self):
+        def do_wrong():
+            self.tpl_string = '{% get_comments_list for object a$ var %}'
             self.render()
         self.assertRaises(TemplateSyntaxError, do_wrong)

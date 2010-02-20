@@ -49,6 +49,18 @@ class CommentsFormActionNode(Node):
 
 # --------------------------------------------------------------------------- #
 
+class CommentsListNode(Node):
+    def __init__(self, object, varname):
+        self.object = Variable(object)
+        self.varname = varname
+
+    def render(self, context):
+        object = self.object.resolve(context)
+        context[self.varname] = Comment.objects.get_for_object(object)
+        return ''
+    
+# --------------------------------------------------------------------------- #
+
 @register.tag
 def insert_comments(parser, token):
     bits = token.split_contents()
@@ -100,3 +112,17 @@ def comments_form_action(parser, token):
         raise TemplateSyntaxError('Wrong syntax for %s tag' % tokens[0])
 
     return CommentsFormActionNode(object=object, parent=parent)
+    
+# --------------------------------------------------------------------------- #
+
+@register.tag
+def get_comments_list(parser, token):
+    tokens = token.split_contents()
+    length = len(tokens)
+
+    if length is not 5 or tokens[1] != 'for' or tokens[3] != 'as':
+        raise TemplateSyntaxError(
+            '{%% %s for [object] as [varname] %%}' % tokens[0]
+        )
+
+    return CommentsListNode(object=tokens[2], varname=tokens[4])
