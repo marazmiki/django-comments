@@ -11,16 +11,7 @@ def create(request, parent_id=None):
     """
     Post a new comment
     """
-
-    def get_parent():
-        """
-        Returns a parent comment if reply created
-        """
-        if parent_id:
-            parent = get_object_or_404(Comment, pk=parent_id)
-
-        else:
-            parent = None
+    parent = get_object_or_404(Comment, pk=parent_id) if parent_id else None
 
     def get_object():
         """
@@ -37,7 +28,6 @@ def create(request, parent_id=None):
     if request.method == 'POST':
         form   = CommentForm(request.POST)
         valid  = form.is_valid()
-        parent = get_parent()
         object = get_object()
 
         if valid:
