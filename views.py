@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils import simplejson
 from django.http import HttpResponse
-from comments.forms import CommentForm
+from comments.forms import CommentForm, ReplyForm
 from comments.models import Comment
 
 def create(request, parent_id=None):
@@ -33,7 +33,8 @@ def create(request, parent_id=None):
         """
         Creates form instance
         """
-        return CommentForm(request.POST) if request.method == 'POST' else CommentForm()
+        form = ReplyForm if parent else CommentForm
+        return form(request.POST) if request.method == 'POST' else form()
 
     parent = get_parent()
     form   = get_form()
@@ -54,7 +55,7 @@ def create(request, parent_id=None):
             if request.is_ajax():
                 result.update(
                     comment = render_to_string('comments/item.html',{'comment': comment, }),
-                    parent  = parent.pk if parent else None,
+                    parent_id = parent.pk if parent else None,
                     comment_id = comment.pk,
                 )
 
