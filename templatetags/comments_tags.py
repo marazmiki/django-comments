@@ -5,6 +5,7 @@ from django.core import urlresolvers
 from django.template import Library, Node, Variable, TemplateSyntaxError
 from django.template.loader import render_to_string
 from comments.models import Comment
+from comments.forms import CommentForm
 
 register = Library()
 
@@ -19,7 +20,8 @@ class InsertCommentsNode(Node):
 
         if object and isinstance(object, Model):
             context.update({
-                'object'           : object,
+                'object' : object,
+                'form'   : CommentForm(),
                 'comments_enabled' : True,   # TODO: get this setting
             })
 
