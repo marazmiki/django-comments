@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.utils import simplejson
 from django.http import HttpResponse
 from comments.forms import CommentForm
+from comments.models import Comment
 
 def create(request, parent_id=None):
     """
@@ -37,10 +38,10 @@ def create(request, parent_id=None):
     parent = get_parent()
     form   = get_form()
     result = dict()
+    object = get_object()
 
     if request.method == 'POST':
         valid  = form.is_valid()
-        object = get_object()
 
         if valid:
             comment = form.save(commit=False)
@@ -53,7 +54,7 @@ def create(request, parent_id=None):
             if request.is_ajax():
                 result.update(
                     comment = render_to_string('comments/item.html',{'comment': comment, }),
-                    parent  = parent,
+                    parent  = parent.pk if parent else None,
                     comment_id = comment.pk,
                 )
 
@@ -62,9 +63,11 @@ def create(request, parent_id=None):
             else:
                 return redirect('/') # TODO: correct redirect URL
 
+        # Add success flag into template context
         result.update(success=valid)
 
-    result.update(form=form)
+    # Add form instance into template context
+    result.update(form=form, parent=parent, object=object)
 
     return render_to_response('comments/create.html', result,
         context_instance=RequestContext(request)

@@ -7,4 +7,4 @@ from comments.models import Comment
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        exclude = ('date_created', 'date_changed', 'is_approved', 'parent', )
+        exclude = ('date_created', 'date_changed', 'is_approved', 'parent', 'remote_addr', 'forwarded_for', 'is_approved', )
