@@ -9,7 +9,7 @@ urlpatterns = patterns('comments.views',
         name  = 'comments_create',
     ),
     url(
-        regex = '^reply/(?P<parent_id>\d+)/$',
+        regex = '^(?P<parent_id>\d+)/reply/$',
         view  = 'create',
         name  = 'comments_reply',
     ),
