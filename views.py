@@ -67,6 +67,10 @@ def create(request, parent_id=None):
         # Add success flag into template context
         result.update(success=valid)
 
+    else:
+        if not parent:
+            return redirect('/') # TODO: correct redirect URL
+
     # Add form instance into template context
     result.update(form=form, parent=parent, object=object)
 
