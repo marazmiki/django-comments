@@ -3,6 +3,7 @@
 from django.db.models import Model
 from django.core import urlresolvers
 from django.template import Library, Node, Variable, TemplateSyntaxError
+from django.contrib.contenttypes.models import ContentType
 from django.template.loader import render_to_string
 from comments.models import Comment
 from comments.forms import CommentForm
@@ -19,9 +20,11 @@ class InsertCommentsNode(Node):
         object = self.object.resolve(context) if self.object else None
 
         if object and isinstance(object, Model):
+            # TODO: can I test this local context?
             context.update({
                 'object' : object,
-                'form'   : CommentForm(),
+                #'form'   : CommentForm(initial=dict(object_pk=object.pk,content_type=ContentType.objects.get_for_model(object).pk  )),
+                'form'   : CommentForm(object=object),
                 'comments_enabled' : True,   # TODO: get this setting
             })
 
