@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404, redirect, render_to_response
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils import simplejson
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from comments.forms import CommentForm, ReplyForm
 from comments.models import Comment
 
@@ -12,7 +13,6 @@ def create(request, parent_id=None):
     """
     Post a new comment
     """
-
     def get_parent():
         """
         Returns parent comment if reply required
@@ -23,11 +23,34 @@ def create(request, parent_id=None):
         """
         Returns instance of object which will be commented
         """
-        object_id    = request.POST.get('object_id')
-        content_type = request.POST.get('content_type')
+        if parent:
+            object = parent.content_object
 
-        from django.contrib.contenttypes.models import ContentType
-        return ContentType.objects.get(pk=1)
+        else:
+            ct = request.POST.get('content_type')
+            op = request.POST.get('object_pk')
+
+            #print "\n**** ADD REQUEST **** \n"
+            #print "content_type = %s" % ct
+            #print "object_pk = %s" % op
+            #
+            #ctt = ContentType.objects.get(pk=ct)
+            #
+            #print "ContentType = %s" % ctt
+            #print "ModelOfType = %s" % ctt.model_class()
+            #print "InstanceOfType =  %s | %s" % (ctt.get_object_for_this_type(pk=op), type( ctt.get_object_for_this_type(pk=op)   ))
+            #
+            #print "\n**** END OF ADD REQUEST **** \n\n"
+
+            # object=ContentType.objects.get(pk=1)
+            try:
+                ctype  = get_object_or_404(ContentType, pk=ct)
+                model  = ctype.model_class()
+                object = get_object_or_404(model, pk=op)
+            except:
+                raise Http404('Wrong content object')
+
+        return object
 
     def get_form():
         """

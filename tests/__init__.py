@@ -11,7 +11,6 @@ def create_comment(object_id=1):
         remote_addr    = '127.0.0.1',
     )
 
-
 from comments.tests.view import *
 from comments.tests.template import *
 from comments.tests.manager import *
