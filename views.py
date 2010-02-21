@@ -63,7 +63,7 @@ def create(request, parent_id=None):
 
             # Makes reply if parent comment specified
             if parent:
-                comment.insert_at(parent, position='first-child',commit=False)
+                comment.insert_at(parent, position='last-child',commit=False)
 
             comment.save()
 
