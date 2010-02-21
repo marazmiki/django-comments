@@ -63,19 +63,13 @@ class InsertCommentsTagTest(BaseTestCase):
         self.tpl_context.update({'object': None})
         self.assertEquals('', self.render())
 
-    def testEmptyObject2(self):
+    def testEmptyObjectWrong(self):
         self.tpl_context.update({'object': 'asdas'})
         self.assertEquals('', self.render())
 
     def testNodeWrongFirstArg(self):
         def do_wrong():
             self.tpl_string = '{% insert_comments f0r object %}'
-            self.render()
-        self.assertRaises(TemplateSyntaxError, do_wrong)
-
-    def testNodeWrongNumberOfArgs(self):
-        def do_wrong():
-            self.tpl_string = '{% insert_comments for object something %}'
             self.render()
         self.assertRaises(TemplateSyntaxError, do_wrong)
 

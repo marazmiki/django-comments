@@ -2,13 +2,17 @@
 {% if comments_enabled %}
     <h1>Insert comments for object {{ object }}</h1>
     <hr />
+
     {% get_comments_list for object as comments %}
     <ul id="comments">
-    {% for comment in comments %}
-        {% include "comments/item.html" %}
-    {% endfor %}
+        {% for comment in comments %}
+            {% include "comments/item.html" %}
+        {% endfor %}
     </ul>
-    {% include "comments/form.html" %}
+    <h2>{% trans "Post new comment" %}</h2>
+    <div id="form-placeholder">
+        {% include "comments/form.html" %}
+    </div>
 {% else %}
     <h1>{% trans "Commenting is disabled" %}</h1>
 {% endif %}
