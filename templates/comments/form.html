@@ -5,4 +5,7 @@
         <li class="submit-publish"><input type="submit" value="{% trans "Publish" %}" /></li>
         <li class="submit-preview"><input type="submit" value="{% trans "Preview" %}" name="_preview" /></li>
     </ul>
+    {% if parent %}
+        return to
+    {% endif %}
 </form>
