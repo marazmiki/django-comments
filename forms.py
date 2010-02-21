@@ -32,6 +32,8 @@ class CommentForm(forms.ModelForm):
 # --------------------------------------------------------------------------- #
 
 class ReplyForm(CommentForm):
+    redirect_to = forms.CharField(required=False, widget=forms.HiddenInput())
+
     def __init__(self, *args, **kwargs):
         super(ReplyForm, self).__init__(*args, **kwargs)
         del self.fields['content_type']
