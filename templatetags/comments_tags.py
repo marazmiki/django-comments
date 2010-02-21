@@ -23,7 +23,7 @@ class InsertCommentsNode(Node):
             # TODO: can I test this local context?
             context.update({
                 'object' : object,
-                'form'   : CommentForm(object=object),
+                'form'   : CommentForm(object  = object),
                 'comments_enabled' : True,   # TODO: get this setting
             })
 
