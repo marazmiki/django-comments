@@ -77,7 +77,7 @@ def create(request, parent_id=None):
                 return HttpResponse(simplejson.dumps(result))
 
             else:
-                return redirect('/') # TODO: correct redirect URL
+                return redirect(request.META.get('HTTP_REFERER', '/')) # TODO: correct redirect URL
 
         # Add success flag into template context
         result.update(success=valid)
