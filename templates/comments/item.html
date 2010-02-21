@@ -1,6 +1,6 @@
 {% load i18n %}
 <li id="comment-{{ comment.id }}" class="comment level-{{ comment.level }} tree-{{ comment.tree_id }}">
-    <div class="head">[left={{comment.lft}}, right={{comment.rgt}}| {{ comment.date_created }}</div>
+    <div class="head">{{ comment.date_created }}</div>
     <div class="content">{{ comment }}</div>
     <div class="bottom"><a href="{% url comments_reply parent_id=comment.id %}">{% trans "Reply" %}</a></div>
 </li>
