@@ -31,6 +31,7 @@ class InsertCommentsNode(Node):
 
         else:
             return ''
+
 # --------------------------------------------------------------------------- #
 
 class CommentsFormActionNode(Node):
@@ -40,7 +41,11 @@ class CommentsFormActionNode(Node):
 
     def render(self, context):
         object = self.object.resolve(context) if self.object else None
-        parent = self.parent.resolve(context) if self.parent else None
+
+        try:
+            parent = self.parent.resolve(context) if self.parent else None
+        except:
+            parent = None
 
         if parent and isinstance(parent, Comment):
             return urlresolvers.reverse('comments_reply',

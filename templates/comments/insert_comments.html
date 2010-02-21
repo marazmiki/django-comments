@@ -3,16 +3,12 @@
     <h1>Insert comments for object {{ object }}</h1>
     <hr />
     {% get_comments_list for object as comments %}
+    <ul id="comments">
     {% for comment in comments %}
         {% include "comments/item.html" %}
     {% endfor %}
-    <form method="post" action="{% comments_form_action%}" id="new-comment">
-        <ul>
-            {{ form.as_ul }}
-            <li class="submit-publish"><input type="submit" value="{% trans "Publish" %}" /></li>
-            <li class="submit-preview"><input type="submit" value="{% trans "Preview" %}" name="_preview" /></li>
-        </ul>
-    </form>
+    </ul>
+    {% include "comments/form.html" %}
 {% else %}
     <h1>{% trans "Commenting is disabled" %}</h1>
 {% endif %}
