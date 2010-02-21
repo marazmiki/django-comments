@@ -1,7 +1,10 @@
-{% load i18n %}
+{% load i18n comments_tags %}
 <h1>{% trans "Add a new comment" %}</h1>
-<form>
+<form method="post" action="{% comments_form_action for object in reply to parent %}">
     <ul>
         {{ form.as_ul }}
+        <li class="submit-publish"><input type="submit" value="{% trans "Publish" %}" /></li>
+        <li class="submit-preview"><input type="submit" value="{% trans "Preview" %}" name="_preview" /></li>
+
     </ul>
 </form>

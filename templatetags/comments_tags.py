@@ -60,7 +60,7 @@ class CommentsListNode(Node):
 
     def render(self, context):
         object = self.object.resolve(context)
-        context[self.varname] = Comment.objects.get_for_object(object)
+        context[self.varname] = Comment.objects.get_for_object(object).order_by('tree_id','lft', 'date_created')
         return ''
     
 # --------------------------------------------------------------------------- #

@@ -1,4 +1,7 @@
 {% load i18n %}
-<li id="comment-{{ comment.id }}" class="comment level-{{ comment.lvl }}">
+<li id="comment-{{ comment.id }}" class="comment level-{{ comment.level }} tree-{{ comment.tree_id }}">
     <div class="content">{{ comment }}</div>
+    <div>
+        <a href="{% url comments_reply parent_id=comment.id %}">{% trans "Reply" %}</a>
+    </div>
 </li>

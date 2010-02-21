@@ -30,19 +30,6 @@ def create(request, parent_id=None):
             ct = request.POST.get('content_type')
             op = request.POST.get('object_pk')
 
-            #print "\n**** ADD REQUEST **** \n"
-            #print "content_type = %s" % ct
-            #print "object_pk = %s" % op
-            #
-            #ctt = ContentType.objects.get(pk=ct)
-            #
-            #print "ContentType = %s" % ctt
-            #print "ModelOfType = %s" % ctt.model_class()
-            #print "InstanceOfType =  %s | %s" % (ctt.get_object_for_this_type(pk=op), type( ctt.get_object_for_this_type(pk=op)   ))
-            #
-            #print "\n**** END OF ADD REQUEST **** \n\n"
-
-            # object=ContentType.objects.get(pk=1)
             try:
                 ctype  = get_object_or_404(ContentType, pk=ct)
                 model  = ctype.model_class()
@@ -73,6 +60,11 @@ def create(request, parent_id=None):
             comment.content_object = object
             comment.remote_addr    = request.META.get('REMOTE_ADDR')
             comment.forwarded_for  = request.META.get('HTTP_X_FORWARDRED_FOR')
+
+            # Makes reply if parent comment specified
+            if parent:
+                comment.insert_at(parent, position='first-child',commit=False)
+
             comment.save()
 
             if request.is_ajax():
