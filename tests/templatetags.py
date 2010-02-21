@@ -2,6 +2,7 @@
 
 from django.test import TestCase, client
 from django.core import urlresolvers
+from django.http import HttpResponse
 from django.template import Template, Context, add_to_builtins, TemplateSyntaxError
 from comments.tests import get_content_object, create_comment
 from comments.models import Comment
@@ -10,6 +11,25 @@ from comments.models import Comment
 
 add_to_builtins('django.templatetags.i18n')
 add_to_builtins('comments.templatetags.comments_tags')
+
+# --------------------------------------------------------------------------- #
+
+def view_insert_comments(request):
+    """
+    View for testing {% insert_comments %} tag with request object in
+    template context
+    
+    """
+    return HttpResponse(
+        Template('{% insert_comments for object %}').render(
+            Context(
+                dict(
+                    object  = get_content_object(),
+                    request = request
+                )
+            )
+        )
+    )
 
 # --------------------------------------------------------------------------- #
 
@@ -29,11 +49,15 @@ class BaseTestCase(TestCase):
 # --------------------------------------------------------------------------- #
 
 class InsertCommentsTagTest(BaseTestCase):
+    urls = 'comments.tests.urls'
+
     def get_valid_tag_template(self):
         return '{% insert_comments for object %}'
 
     def testCorrect(self):
-        self.render()
+        name = 'templatetags_insert_comment'
+        resp = client.Client().get(urlresolvers.reverse(name))
+        self.assertEquals(200, resp.status_code)
 
     def testEmptyObject(self):
         self.tpl_context.update({'object': None})

@@ -12,6 +12,6 @@ def create_comment(object_id=1):
     )
 
 from comments.tests.view import *
-from comments.tests.template import *
-from comments.tests.manager import *
-from comments.tests.form import *
+from comments.tests.templatetags import *
+from comments.tests.managers import *
+from comments.tests.forms import *
