@@ -43,8 +43,18 @@ def create(request, parent_id=None):
         """
         Creates form instance
         """
+        if request.method == 'GET' and parent:
+            redirect_to = request.META.get('HTTP_REFERER', '/')
+
+        else:
+            redirect_to = request.POST.get('redirect_to', '/')
+        
         form = ReplyForm if parent else CommentForm
-        return form(request.POST) if request.method == 'POST' else form()
+        init = dict(initial={'redirect_to':redirect_to})
+
+        return form(request.POST,**init)     \
+            if request.method == 'POST'      \
+            else form(**init)
 
     parent = get_parent()
     form   = get_form()
@@ -77,7 +87,8 @@ def create(request, parent_id=None):
                 return HttpResponse(simplejson.dumps(result))
 
             else:
-                return redirect(request.META.get('HTTP_REFERER', '/')) # TODO: correct redirect URL
+                url = request.POST.get('redirect_to') or '/'
+                return redirect(url)
 
         # Add success flag into template context
         result.update(success=valid)

@@ -21,9 +21,12 @@ class InsertCommentsNode(Node):
 
         if object and isinstance(object, Model):
             # TODO: can I test this local context?
+            request = context.get('request')
+            referer = request.path_info
+
             context.update({
                 'object' : object,
-                'form'   : CommentForm(object  = object),
+                'form'   : CommentForm(object=object,initial=dict(redirect_to=referer)),
                 'comments_enabled' : True,   # TODO: get this setting
             })
 
