@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes import generic
 from mptt import register as mptt_register, registry as mptt_registry
 from comments.settings import PREMODERATE, ENABLED, LEVEL_LIMIT
-from comments.managers import CommentManager
+from comments.managers import CommentManager, CommentSettingsManager
 
 class CommentBase(models.Model):
     content_type   = models.ForeignKey('contenttypes.ContentType')
@@ -19,27 +19,6 @@ class CommentBase(models.Model):
     class Meta:
         app_label = 'comments'
         abstract = True
-
-# --------------------------------------------------------------------------- #
-
-class Comment(CommentBase):
-    content        = models.TextField()
-    date_created   = models.DateTimeField(blank=True, default=datetime.now())
-    date_changed   = models.DateTimeField(blank=True, default=datetime.now())
-    is_approved    = models.BooleanField(default=True)
-    parent_comment = models.ForeignKey('self', blank=True, null=True, related_name='children')
-    remote_addr    = models.IPAddressField(blank=True, default='')
-    forwarded_for  = models.IPAddressField(blank=True, null=True)
-
-    objects = CommentManager()
-
-    def __unicode__(self):
-        return self.content
-
-    class Meta:
-        app_label = 'comments'
-        verbose_name = _('Comment')
-        verbose_name_plural = _('Comments')
 
 # --------------------------------------------------------------------------- #
 
@@ -61,6 +40,8 @@ class CommentSettings(CommentBase):
         blank     = True,
         help_text = _('Specify 0 if no level limit needed'))
 
+    objects = CommentSettingsManager()
+
     def __unicode__(self):
         return unicode(self.content_object)
     
@@ -68,6 +49,33 @@ class CommentSettings(CommentBase):
         app_label = 'comments'
         verbose_name = _('Object specified settings')
         verbose_name_plural = _('Object specified settings')
+
+# --------------------------------------------------------------------------- #
+
+class Comment(CommentBase):
+    content        = models.TextField()
+    date_created   = models.DateTimeField(blank=True, default=datetime.now())
+    date_changed   = models.DateTimeField(blank=True, default=datetime.now())
+    is_approved    = models.BooleanField(default=True)
+    parent_comment = models.ForeignKey('self', blank=True, null=True, related_name='children')
+    remote_addr    = models.IPAddressField(blank=True, default='')
+    forwarded_for  = models.IPAddressField(blank=True, null=True)
+
+    objects = CommentManager()
+
+    def __unicode__(self):
+        return self.content
+
+    def get_settings(self):
+        try:
+            return CommentSettings.objects.get_for_object(self.content_object)[0]
+        except (IndexError, CommentSettings.DoesNotExist):
+            return CommentSettings()
+
+    class Meta:
+        app_label = 'comments'
+        verbose_name = _('Comment')
+        verbose_name_plural = _('Comments')
 
 # --------------------------------------------------------------------------- #
 

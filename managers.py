@@ -10,3 +10,6 @@ class CommentManager(models.Manager):
                 content_type = ContentType.objects.get_for_model(object),
                 object_pk    = object.pk,
             )
+
+class CommentSettingsManager(CommentManager):
+    pass
