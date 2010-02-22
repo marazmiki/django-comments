@@ -13,7 +13,61 @@
     <div id="form-placeholder">
         {% include "comments/form.html" %}
     </div>
-    <script type="text/javascript" src="{{ MEDIA_URL }}comments/js/comments.js"></script>
+    <script type="text/javascript"{# src="{{ MEDIA_URL }}comments/js/comments.js" #}>
+var CommentsHandler = function(){
+    var defaultFormAction;
+    var formPostComment = $('#form-post-comment');
+    var formPlaceholder = $('#form-placeholder');
+    var commentsList = $('#comments');
+
+    var setHandlers = function(){
+        defaultFormAction = formPostComment.attr('action');
+
+        $('#comments li a.button-reply').live('click', function(){
+            var link = $(this);
+            link.closest('li').append(formPostComment);
+            formPostComment.attr('action', link.attr('href'));
+            formPostComment.find('textarea').focus();
+            return false;
+        });
+
+        formPostComment.submit(function(e){
+            $('ul.errorlist', formPostComment).remove();
+            $.post(
+                formPostComment.attr('action'),
+                formPostComment.serialize(),
+                function(json){
+                    if (json.success) {
+                        if (json.parent_id) {
+                            $('#comment-'+json.parent_id).after(json.comment);
+                        } else {
+                            commentsList.append(json.comment);
+                        }
+
+                        formPostComment.attr(defaultFormAction);
+                        formPostComment.find('textarea').val('');
+                        formPlaceholder.append(formPostComment);
+                    } else {
+                        for (var e in json.errors) {
+                            $('#id_'+e, formPostComment).closest('li')
+                                .prepend(json.errors[e]);
+                        }
+                    }
+                },
+                'json'
+            );
+            return false;
+        });
+    }
+
+    return {
+        init: function(){
+            setHandlers();
+        }
+    }
+}
+    </script>
+    <script type="text/javascript">CommentsHandler().init();</script>
 {% else %}
     <h1>{% trans "Commenting is disabled" %}</h1>
 {% endif %}
