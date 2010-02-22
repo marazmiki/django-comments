@@ -22,14 +22,7 @@ var CommentsHandler = function(){
 
     var insertComment = function(html, comment_id, parent_id) {
         if (parent_id) {
-            console.log('parent_id = '+parent_id)
-            var parent = $('#comment-'+parent_id);
-            var parentTree  = parent.attr('class').replace(/^.*?tree-(\d+).*?$/g,  '$1');
-            var parentLevel = parent.attr('class').replace(/^.*?level-(\d+).*?$/g, '$1');
-            var selector = '#comments li.tree-'+parentTree+'.level-'+(parseInt(parentLevel)+1)+':last';
-
-            $(selector).after(html);
-
+            $('#comment-'+parent_id).after(html);
         } else {
             commentsList.append(html);
         }
