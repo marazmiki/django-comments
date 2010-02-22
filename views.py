@@ -64,6 +64,9 @@ def create(request, parent_id=None):
     if request.method == 'POST':
         valid  = form.is_valid()
 
+        # Add success flag into template context
+        result.update(success=valid)
+
         if valid:
             comment = form.save(commit=False)
             comment.parent_comment = parent
@@ -89,9 +92,6 @@ def create(request, parent_id=None):
             else:
                 url = request.POST.get('redirect_to') or '/'
                 return redirect(url)
-
-        # Add success flag into template context
-        result.update(success=valid)
 
     # Add form instance into template context
     result.update(form=form, parent=parent, object=object)
