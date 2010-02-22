@@ -13,6 +13,7 @@
     <div id="form-placeholder">
         {% include "comments/form.html" %}
     </div>
+    <script type="text/javascript" src="{{ MEDIA_URL }}comments/js/comments.js"></script>
 {% else %}
     <h1>{% trans "Commenting is disabled" %}</h1>
 {% endif %}
