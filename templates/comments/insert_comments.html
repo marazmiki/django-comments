@@ -20,12 +20,29 @@ var CommentsHandler = function(){
     var formPlaceholder = $('#form-placeholder');
     var commentsList = $('#comments');
 
+    var insertComment = function(html, comment_id, parent_id) {
+        if (parent_id) {
+            console.log('parent_id = '+parent_id)
+            var parent = $('#comment-'+parent_id);
+            var parentTree  = parent.attr('class').replace(/^.*?tree-(\d+).*?$/g,  '$1');
+            var parentLevel = parent.attr('class').replace(/^.*?level-(\d+).*?$/g, '$1');
+            var selector = '#comments li.tree-'+parentTree+'.level-'+(parseInt(parentLevel)+1)+':last';
+
+            $(selector).after(html);
+
+        } else {
+            commentsList.append(html);
+        }
+        window.location.hash = 'comment-'+comment_id;
+    }
+
     var setHandlers = function(){
         defaultFormAction = formPostComment.attr('action');
 
         $('#comments li a.button-reply').live('click', function(){
-            var link = $(this);
-            link.closest('li').append(formPostComment);
+            var link  = $(this);
+            var comment = link.closest('li');
+            comment.append(formPostComment);
             formPostComment.attr('action', link.attr('href'));
             formPostComment.find('textarea').focus();
             return false;
@@ -38,12 +55,7 @@ var CommentsHandler = function(){
                 formPostComment.serialize(),
                 function(json){
                     if (json.success) {
-                        if (json.parent_id) {
-                            $('#comment-'+json.parent_id).after(json.comment);
-                        } else {
-                            commentsList.append(json.comment);
-                        }
-
+                        insertComment(json.comment, json.comment_id, json.parent_id);
                         formPostComment.attr(defaultFormAction);
                         formPostComment.find('textarea').val('');
                         formPlaceholder.append(formPostComment);
