@@ -23,7 +23,7 @@ class SettingsTest(TestCase):
         self.assertEquals(ENABLED,     comment_settings.enabled)
         self.assertEquals(LEVEL_LIMIT, comment_settings.level_limit)
 
-    def testDefaultSettings(self):
+    def testOverrideSettings(self):
         c = CommentSettings.objects.create(
             premoderate    = not PREMODERATE,
             enabled        = not ENABLED,
