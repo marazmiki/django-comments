@@ -93,6 +93,18 @@ def create(request, parent_id=None):
                 url = request.POST.get('redirect_to') or '/'
                 return redirect(url)
 
+        else:
+            errors=dict()
+            for f in form.errors:
+                errors[f] = unicode(form.errors[f])
+            result.update(errors=errors)
+
+            if request.is_ajax():
+                return HttpResponse(simplejson.dumps(result))
+            #else:
+            #    url = request.POST.get('redirect_to') or '/'
+            #    return redirect(url)
+
     # Add form instance into template context
     result.update(form=form, parent=parent, object=object)
 
