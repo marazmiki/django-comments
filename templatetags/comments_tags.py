@@ -30,7 +30,8 @@ class InsertCommentsNode(Node):
             context.update({
                 'object' : object,
                 'form'   : CommentForm(object=object,initial=dict(redirect_to=referer)),
-                'comments_enabled' : settings.enabled,
+                'comments_enabled'     : settings.enabled,
+                'comments_premoderate' : settings.premoderate,
             })
 
             return render_to_string('comments/insert_comments.html', context)
