@@ -63,10 +63,13 @@ def create(request, parent_id=None):
     object = get_object()
 
     if request.method == 'POST':
+        # Gets object specified comments settings
         settings = get_settings_for_object(object)
+
         if not settings.enabled:
             raise Http404('Comment for this object is disabled')
 
+        # Valdiate the form
         valid  = form.is_valid()
 
         # Add success flag into template context
@@ -78,6 +81,7 @@ def create(request, parent_id=None):
             comment.content_object = object
             comment.remote_addr    = request.META.get('REMOTE_ADDR')
             comment.forwarded_for  = request.META.get('HTTP_X_FORWARDRED_FOR')
+            comment.is_approved    = not settings.premoderate
 
             # Makes reply if parent comment specified
             if parent:
