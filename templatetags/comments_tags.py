@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.template.loader import render_to_string
 from comments.models import Comment
 from comments.forms import CommentForm
+from comments.utils import get_settings_for_object
 
 register = Library()
 
@@ -24,10 +25,12 @@ class InsertCommentsNode(Node):
             request = context.get('request')
             referer = request.path_info
 
+            settings = get_settings_for_object(object)
+            
             context.update({
                 'object' : object,
                 'form'   : CommentForm(object=object,initial=dict(redirect_to=referer)),
-                'comments_enabled' : True,   # TODO: get this setting
+                'comments_enabled' : settings.enabled,
             })
 
             return render_to_string('comments/insert_comments.html', context)

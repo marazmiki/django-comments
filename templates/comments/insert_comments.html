@@ -19,6 +19,7 @@ var CommentsHandler = function(){
     var formPostComment = $('#form-post-comment');
     var formPlaceholder = $('#form-placeholder');
     var commentsList = $('#comments');
+    var submitButtons;
 
     var insertComment = function(html, comment_id, parent_id) {
         if (parent_id) {
@@ -31,10 +32,12 @@ var CommentsHandler = function(){
 
     var setHandlers = function(){
         defaultFormAction = formPostComment.attr('action');
+        submitButtons = formPostComment.find(':submit');
 
         $('#comments li a.button-reply').live('click', function(){
             var link  = $(this);
             var comment = link.closest('li');
+            $('ul.errorlist', formPostComment).remove();
             comment.append(formPostComment);
             formPostComment.attr('action', link.attr('href'));
             formPostComment.find('textarea').focus();
@@ -43,6 +46,8 @@ var CommentsHandler = function(){
 
         formPostComment.submit(function(e){
             formPostComment.addClass('in-progress');
+            submitButtons.attr('disabled', 'disabled');
+
             $('ul.errorlist', formPostComment).remove();
             $.ajax({
                 type     : 'post',
@@ -66,6 +71,7 @@ var CommentsHandler = function(){
                     // if (status != 'success') { alert(status); }
                     //submitButton.removeAttr('disabled');
                     formPostComment.removeClass('in-progress');
+                    submitButtons.removeAttr('disabled');
                 }
             });
 
