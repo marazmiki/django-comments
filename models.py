@@ -24,21 +24,24 @@ class CommentBase(models.Model):
 
 class CommentSettings(CommentBase):
     premoderate = models.BooleanField(
-        default   = PREMODERATE,
-        blank     = True,
-        help_text =_('Enable premoderation for this content object')
+        default      = PREMODERATE,
+        blank        = True,
+        verbose_name = _('Premoderate'),
+        help_text    = _('Enable premoderation for this content object')
     )
 
     enabled = models.BooleanField(
-        default   = ENABLED,
-        blank     = True,
-        help_text = _('Enables comment for this content object')
+        default      = ENABLED,
+        blank        = True,
+        verbose_name = _('Enable comments'),
+        help_text    = _('Enables comment for this content object')
     )
 
     level_limit = models.PositiveIntegerField(
-        default   = LEVEL_LIMIT,
-        blank     = True,
-        help_text = _('Specify 0 if no level limit needed'))
+        default      = LEVEL_LIMIT,
+        blank        = True,
+        verbose_name = _('Nest depth'),
+        help_text    = _('Specify 0 if no level limit needed'))
 
     objects = CommentSettingsManager()
 
