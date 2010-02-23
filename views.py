@@ -8,6 +8,7 @@ from django.utils import simplejson
 from django.http import HttpResponse, Http404
 from comments.forms import CommentForm, ReplyForm
 from comments.models import Comment
+from comments.utils import get_settings_for_object
 
 def create(request, parent_id=None):
     """
@@ -62,6 +63,10 @@ def create(request, parent_id=None):
     object = get_object()
 
     if request.method == 'POST':
+        settings = get_settings_for_object(object)
+        if not settings.enabled:
+            raise Http404('Comment for this object is disabled')
+
         valid  = form.is_valid()
 
         # Add success flag into template context
