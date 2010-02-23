@@ -49,6 +49,7 @@ class CommentSettings(CommentBase):
         app_label = 'comments'
         verbose_name = _('Object specified settings')
         verbose_name_plural = _('Object specified settings')
+        unique_together = ('content_type', 'object_pk')
 
 # --------------------------------------------------------------------------- #
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.test import TestCase
+from django.db import IntegrityError
 from comments.models import Comment, CommentSettings
 from comments.settings import PREMODERATE, ENABLED, LEVEL_LIMIT
 from comments.utils import get_settings_for_object
@@ -16,6 +17,20 @@ class SettingsTest(TestCase):
             level_limit    = LEVEL_LIMIT + 15,
             content_object = self.object,
         )
+
+    def testUniqueForObject(self):
+        def do_wrong():
+            CommentSettings.objects.create(
+                premoderate    = PREMODERATE,
+                enabled        = ENABLED,
+                level_limit    = LEVEL_LIMIT + 22,
+                content_object = self.object,
+            )
+
+        self.assertEquals(1, CommentSettings.objects.count())
+        self.assertRaises(IntegrityError, do_wrong)
+        self.assertEquals(1, CommentSettings.objects.count())
+        
 
     def testInstance(self):
         self.assertTrue(
