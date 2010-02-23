@@ -28,3 +28,15 @@ class CommentManagerTest(TestCase):
         self.assertEquals(comments_number,     Comment.objects.get_for_object(another_object).count())
         self.assertEquals(comments_number + 1, Comment.objects.count())
         
+
+    def testApprovedFilter(self):
+        qset = Comment.objects.get_for_object(self.object)
+        self.assertEquals(1, qset.count())
+        
+        # Create unapproved comment
+        comment = create_comment()
+        comment.is_approved=False
+        comment.save()
+        
+        self.assertEquals(1, qset.count())
+        self.assertEquals(2, Comment.objects.count())

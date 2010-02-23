@@ -12,7 +12,10 @@ class BaseManager(models.Manager):
             )
 
 class CommentManager(BaseManager):
-    pass
-    
+    def get_for_object(self, object):
+        return super(CommentManager, self)   .\
+            get_for_object(object)      .\
+            filter(is_approved=True)
+
 class CommentSettingsManager(BaseManager):
     pass
