@@ -42,11 +42,14 @@ var CommentsHandler = function(){
         });
 
         formPostComment.submit(function(e){
+            formPostComment.addClass('in-progress');
             $('ul.errorlist', formPostComment).remove();
-            $.post(
-                formPostComment.attr('action'),
-                formPostComment.serialize(),
-                function(json){
+            $.ajax({
+                type     : 'post',
+                dataType : 'json',
+                data     : formPostComment.serialize(),
+                url      : formPostComment.attr('action'),
+                success  : function(json, status, xhr){
                     if (json.success) {
                         insertComment(json.comment, json.comment_id, json.parent_id);
                         formPostComment.attr(defaultFormAction);
@@ -59,8 +62,13 @@ var CommentsHandler = function(){
                         }
                     }
                 },
-                'json'
-            );
+                complete : function(xhr, status){
+                    // if (status != 'success') { alert(status); }
+                    //submitButton.removeAttr('disabled');
+                    formPostComment.removeClass('in-progress');
+                }
+            });
+
             return false;
         });
     }
