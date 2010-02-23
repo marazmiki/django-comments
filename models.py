@@ -66,12 +66,6 @@ class Comment(CommentBase):
     def __unicode__(self):
         return self.content
 
-    def get_settings(self):
-        try:
-            return CommentSettings.objects.get_for_object(self.content_object)[0]
-        except (IndexError, CommentSettings.DoesNotExist):
-            return CommentSettings()
-
     class Meta:
         app_label = 'comments'
         verbose_name = _('Comment')

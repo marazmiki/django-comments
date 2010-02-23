@@ -3,6 +3,7 @@
 from django.test import TestCase
 from comments.models import Comment, CommentSettings
 from comments.settings import PREMODERATE, ENABLED, LEVEL_LIMIT
+from comments.utils import get_settings_for_object
 from comments.tests import get_content_object, create_comment
 
 class SettingsTest(TestCase):
@@ -17,13 +18,15 @@ class SettingsTest(TestCase):
         )
 
     def testInstance(self):
-        self.assertTrue(isinstance(self.comment.get_settings(), CommentSettings))
+        self.assertTrue(
+            isinstance(get_settings_for_object(self.object), CommentSettings)
+        )
 
     def testDefaultSettings(self):
         to_delete = CommentSettings.objects.all()
         to_delete.delete()
 
-        comment_settings = self.comment.get_settings()
+        comment_settings = get_settings_for_object(self.object)
         
         self.assertEquals(PREMODERATE, comment_settings.premoderate)
         self.assertEquals(ENABLED,     comment_settings.enabled)
@@ -32,12 +35,12 @@ class SettingsTest(TestCase):
     def testUnicode(self):
         self.assertEquals(
             unicode(self.object),
-            unicode(self.comment.get_settings())
+            unicode(get_settings_for_object(self.object))
         )
 
     def testOverrideSettings(self):
 
-        comment_settings = self.comment.get_settings()
+        comment_settings = get_settings_for_object(self.object)
 
         self.assertEquals(not PREMODERATE,  comment_settings.premoderate)
         self.assertEquals(not ENABLED,      comment_settings.enabled)
