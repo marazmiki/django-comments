@@ -5,7 +5,8 @@ from django.core import urlresolvers
 from django.http import HttpResponse
 from django.template import Template, Context, add_to_builtins, TemplateSyntaxError
 from comments.tests import get_content_object, create_comment
-from comments.models import Comment
+from comments.models import Comment, CommentSettings
+from comments.settings import PREMODERATE, ENABLED, LEVEL_LIMIT
 
 # --------------------------------------------------------------------------- #
 
