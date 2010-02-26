@@ -2,8 +2,12 @@
 
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
+from comments.query import CommentsQuerySet
 
 class BaseManager(models.Manager):
+    def get_query_set(self):
+        return CommentsQuerySet(self.model)
+
     def get_for_object(self, object):
         return super(BaseManager, self).get_query_set().select_related().\
             filter(

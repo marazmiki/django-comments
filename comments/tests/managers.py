@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from comments.models import Comment
 from comments.managers import CommentManager
 from comments.tests import create_comment, get_content_object
+from comments.query import CommentsQuerySet
 
 # --------------------------------------------------------------------------- #
 
@@ -12,6 +13,9 @@ class CommentManagerTest(TestCase):
     def setUp(self):
         self.comment = create_comment()
         self.object = get_content_object()
+
+    def testQuerySetInstance(self):
+        self.assertTrue(isinstance(Comment.objects.all(), CommentsQuerySet))
 
     def testInstance(self):
         self.assertTrue(isinstance(Comment.objects, CommentManager))
