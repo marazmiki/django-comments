@@ -42,5 +42,5 @@ class CommentManagerTest(TestCase):
         comment.is_approved=False
         comment.save()
         
-        self.assertEquals(1, qset.count())
+        self.assertEquals(1, qset.approved().count())
         self.assertEquals(2, Comment.objects.count())

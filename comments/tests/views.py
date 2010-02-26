@@ -78,7 +78,8 @@ class CreateCommentTest(BaseCommentTest):
             if flag:
                 self.assertTrue(Comment.objects.get_for_object(self.object)[0].is_approved)
             else:
-                self.assertEquals(0, Comment.objects.get_for_object(self.object).count())
+                self.assertEquals(0, Comment.objects.get_for_object(self.object).approved().count())
+                self.assertEquals(0, Comment.objects.approved().get_for_object(self.object).count())
 
     def testCreateViewExists(self):
         data = self.get_valid_post_data()
@@ -282,4 +283,4 @@ class ReplyCommentTest(BaseCommentTest):
             if flag:
                 self.assertTrue(qs[0].is_approved)
             else:
-                self.assertEquals(0, qs.count())
+                self.assertEquals(0, qs.approved().count())
