@@ -130,9 +130,9 @@ class CreateCommentTest(BaseCommentTest):
         json = simplejson.loads(resp.content)
 
         self.assertEquals(200, resp.status_code)
-        self.assertTrue(json.has_key('success'))
-        self.assertTrue(json.has_key('comment'))
-        self.assertTrue(json.has_key('parent_id'))
+        self.assertTrue('success' in json)
+        self.assertTrue('comment' in json)
+        self.assertTrue('parent_id' in json)
         self.assertTrue(json.get('parent_id') is None)
         self.assertTrue(json.get('success'))
 
@@ -148,7 +148,7 @@ class CreateCommentTest(BaseCommentTest):
             del data[key]
             resp = self.client.post(self.url, data)
 
-            self.assertTrue(resp.context['form'].errors.has_key(key))
+            self.assertTrue(key in resp.context['form'].errors)
             self.assertFalse(resp.context['success'])
 
     def testAjaxPostNewCommentFailEachField(self):
@@ -164,7 +164,7 @@ class CreateCommentTest(BaseCommentTest):
             resp = self.client.post(self.url, data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
             json = simplejson.loads(resp.content)
             self.assertFalse(json['success'])
-            self.assertTrue(json['errors'].has_key(key))
+            self.assertTrue(key in json['errors'])
 
     def testPostNewCommentFail(self):
         data = self.get_valid_post_data()
@@ -237,8 +237,8 @@ class ReplyCommentTest(BaseCommentTest):
 
         self.assertEquals(200, resp.status_code)
         self.assertEquals(2, Comment.objects.get_for_object(self.object).count())
-        self.assertTrue(json.has_key('comment'))
-        self.assertTrue(json.has_key('parent_id'))
+        self.assertTrue('comment' in json)
+        self.assertTrue('parent_id' in json)
         self.assertTrue(json.get('parent_id'), self.parent.pk)
         self.assertTrue(isinstance(json.get('comment'), basestring))
 
@@ -248,7 +248,7 @@ class ReplyCommentTest(BaseCommentTest):
         for key, value in data.items():
             del data[key]
             resp = self.client.post(self.url, data)
-            self.assertTrue(resp.context['form'].errors.has_key(key))
+            self.assertTrue(key in resp.context['form'].errors)
 
         self.assertEquals(1, Comment.objects.get_for_object(self.object).count())
 
@@ -259,7 +259,7 @@ class ReplyCommentTest(BaseCommentTest):
             del data[key]
             resp = self.client.post(self.url, data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
             json = simplejson.loads(resp.content)
-            self.assertTrue(json['errors'].has_key(key))
+            self.assertTrue(key in json['errors'])
 
         self.assertEquals(1, Comment.objects.get_for_object(self.object).count())
         

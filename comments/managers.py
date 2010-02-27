@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
-from comments.query import CommentsQuerySet
+from comments.query import CommentsQuerySet, LastReadedCommentQuerySet
 
 class BaseManager(models.Manager):
     def get_query_set(self):
@@ -21,3 +21,11 @@ class CommentManager(BaseManager):
 
 class CommentSettingsManager(BaseManager):
     pass
+
+class LastReadedCommentManager(BaseManager):
+    def get_query_set(self):
+        return LastReadedCommentQuerySet(self.model)
+        
+    def get_for_user_and_object(self, user, content_object):
+        lasts = self.get_for_object(content_object).filter(user=user)[:1]
+        return lasts[0] if lasts else None
