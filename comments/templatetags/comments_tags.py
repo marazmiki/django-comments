@@ -5,7 +5,7 @@ from django.core import urlresolvers
 from django.template import Library, Node, Variable, TemplateSyntaxError
 from django.contrib.contenttypes.models import ContentType
 from django.template.loader import render_to_string
-from comments.models import Comment
+from comments.models import Comment, LastReadedComment
 from comments.forms import CommentForm
 from comments.utils import get_settings_for_object
 
@@ -71,8 +71,29 @@ class CommentsListNode(Node):
         self.varname = varname
 
     def render(self, context):
-        object = self.object.resolve(context)
-        context[self.varname] = Comment.objects.get_for_object(object).order_by('tree_id', 'lft', 'date_created')
+        object   = self.object.resolve(context)
+        comments = Comment.objects.get_for_object(object).approved()
+        request  = context.get('request')
+
+        if request and request.user.is_authenticated():
+            last = comments.order_by('-id')
+
+            if len(last):
+                last_comment = last[0]
+
+                readed, created = LastReadedComment.objects.get_or_create(
+                    user         = request.user,
+                    object_pk    = object.pk,
+                    content_type = ContentType.objects.get_for_model(object),
+                    defaults     = dict(comment=last_comment)
+                )
+
+                if readed.comment != last_comment:
+                    readed.comment = last_comment
+                    readed.save()
+
+
+        context[self.varname] = comments.order_by('tree_id', 'lft', 'date_created')
         return ''
     
 # --------------------------------------------------------------------------- #

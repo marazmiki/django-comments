@@ -92,11 +92,11 @@ class LastReadedComment(CommentBase):
     objects = LastReadedCommentManager()
 
     def __unicode__(self):
-        return unicode(comment)
+        return unicode(self.comment)
 
     class Meta:
         app_label = 'comments'
-        unique_together = ('user', 'comment', )
+        unique_together = ('user', 'content_type', 'object_pk', )
 
 # --------------------------------------------------------------------------- #
 

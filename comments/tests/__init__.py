@@ -14,18 +14,20 @@ def create_comment(object_id=1):
         remote_addr    = '127.0.0.1',
     )
 
-USERNAME = 'John'
+USERNAME = 'john'
 PASSWORD = 'qwerty123456'
 EMAIL = 'john@doe.com'
 
 def create_user(username=USERNAME, password=PASSWORD, email=EMAIL):
-    user, created = User.objects.get_or_create(
-        username  = username,
-        defaults  = dict(
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        user = User.objects.create_user(
+            username  = username,
             password = password,
             email    = email,
         )
-    )
+
     return user
 
 from comments.tests.environment import *

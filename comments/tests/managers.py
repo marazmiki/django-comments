@@ -74,6 +74,8 @@ class LastReadedCommentManagerTest(TestCase):
         self.assertTrue(isinstance(last_readed, LastReadedComment))
         self.assertEquals(self.comment, last_readed.comment)
         self.assertEquals(self.user, last_readed.user)
+        self.assertEquals(unicode(self.comment), unicode(last_readed))
+
 
     def testGetForUserAndObjectIfNone(self):
         old_data = LastReadedComment.objects.all()
