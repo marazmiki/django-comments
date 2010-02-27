@@ -88,7 +88,7 @@ class CommentsListNode(Node):
                     defaults     = dict(comment=last_comment)
                 )
 
-                if readed.comment != last_comment:
+                if not created and readed.comment != last_comment:
                     readed.comment = last_comment
                     readed.save()
 
