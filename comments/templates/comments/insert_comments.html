@@ -57,7 +57,7 @@ var CommentsHandler = function(){
                 success  : function(json, status, xhr){
                     if (json.success) {
                         insertComment(json.comment, json.comment_id, json.parent_id);
-                        formPostComment.attr(defaultFormAction);
+                        formPostComment.attr('action', defaultFormAction);
                         formPostComment.find('textarea').val('');
                         formPlaceholder.append(formPostComment);
                     } else {
