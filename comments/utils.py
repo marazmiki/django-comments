@@ -8,7 +8,10 @@ def get_settings_for_object(object):
         return CommentSettings.objects.get_for_object(object)[0]
     except (IndexError, CommentSettings.DoesNotExist):
         return CommentSettings()
-        
+
+def count_comments_for_object(content_object):
+    return Comment.objects.get_for_object(content_object).approved().count()
+
 def update_last_readed_comment(user, content_object):
     last = Comment.objects.get_for_object(content_object).order_by('-id')
 

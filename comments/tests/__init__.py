@@ -37,3 +37,4 @@ from comments.tests.managers import *
 from comments.tests.forms import *
 from comments.tests.settings import *
 from comments.tests.last_readed import *
+from comments.tests.utils import *
