@@ -7,8 +7,8 @@ from django.template.loader import render_to_string
 from django.utils import simplejson
 from django.http import HttpResponse, Http404
 from comments.forms import CommentForm, ReplyForm
-from comments.models import Comment
-from comments.utils import get_settings_for_object
+from comments.models import Comment, LastReadedComment
+from comments.utils import get_settings_for_object, update_last_readed_comment
 
 def create(request, parent_id=None):
     """
@@ -89,6 +89,9 @@ def create(request, parent_id=None):
 
             comment.save()
 
+            if request.user.is_authenticated():
+                update_last_readed_comment(request.user, object)
+
             if request.is_ajax():
                 result.update(
                     comment = render_to_string('comments/item.html',{'comment': comment, }),
@@ -110,9 +113,6 @@ def create(request, parent_id=None):
 
             if request.is_ajax():
                 return HttpResponse(simplejson.dumps(result))
-            #else:
-            #    url = request.POST.get('redirect_to') or '/'
-            #    return redirect(url)
 
     # Add form instance into template context
     result.update(form=form, parent=parent, object=object)
