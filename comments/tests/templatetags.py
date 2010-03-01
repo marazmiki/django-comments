@@ -34,6 +34,25 @@ def view_insert_comments(request):
 
 # --------------------------------------------------------------------------- #
 
+def view_get_comments_count(request):
+    """
+    View for testing {% get_comments _comments %} tag with request object in
+    template context
+
+    """
+    return HttpResponse(
+        Template('{% get_comments_count for object as count %}').render(
+            Context(
+                dict(
+                    object  = get_content_object(),
+                    request = request
+                )
+            )
+        )
+    )
+
+# --------------------------------------------------------------------------- #
+
 class BaseTestCase(TestCase):
     def setUp(self):
         self.tpl_string  = self.get_valid_tag_template()
@@ -148,5 +167,51 @@ class CommentsListTagTest(BaseTestCase):
     def testSyntaxErrorsThirdArgIsNotAs(self):
         def do_wrong():
             self.tpl_string = '{% get_comments_list for object a$ var %}'
+            self.render()
+        self.assertRaises(TemplateSyntaxError, do_wrong)
+
+# --------------------------------------------------------------------------- #
+
+class CommentsCountTagTest(BaseTestCase):
+    urls = 'comments.tests.urls'
+
+    def get_valid_tag_template(self):
+        return '{% get_comments_count for object as var %}'
+
+    def testCountWorks(self):
+        object = get_content_object()
+        limit = 3
+
+        for i in xrange(limit):
+            comment, bad_comment = create_comment(), create_comment()
+            bad_comment.is_approved = False
+            bad_comment.save()
+
+        name = 'templatetags_get_comments_count'
+        resp = client.Client().get(urlresolvers.reverse(name))
+
+        self.assertTrue('count' in resp.context)
+        self.assertEquals(limit, resp.context.get('count'))
+        self.assertEquals(2*limit, Comment.objects.get_for_object(object).count())
+        self.assertEquals(limit, Comment.objects.get_for_object(object).approved().count())
+
+    def testSyntaxOk(self):
+        html = self.render()
+
+    def testSyntaxErrorsWrongArgsNum(self):
+        def do_wrong():
+            self.tpl_string = '{% get_comments_count blah %}'
+            self.render()
+        self.assertRaises(TemplateSyntaxError, do_wrong)
+
+    def testSyntaxErrorsSecondArgIsNotFor(self):
+        def do_wrong():
+            self.tpl_string = '{% get_comments_count for_ object as var %}'
+            self.render()
+        self.assertRaises(TemplateSyntaxError, do_wrong)
+
+    def testSyntaxErrorsThirdArgIsNotAs(self):
+        def do_wrong():
+            self.tpl_string = '{% get_comments_count for object a$ var %}'
             self.render()
         self.assertRaises(TemplateSyntaxError, do_wrong)

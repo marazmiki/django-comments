@@ -80,7 +80,21 @@ class CommentsListNode(Node):
 
         context[self.varname] = comments.order_by('tree_id', 'lft', 'date_created')
         return ''
-    
+
+# --------------------------------------------------------------------------- #
+
+class CommentsCountNode(Node):
+    def __init__(self, object, varname):
+        self.object = Variable(object)
+        self.varname = varname
+
+    def render(self, context):
+        context[self.varname] = Comment.objects             .\
+            get_for_object(self.object.resolve(context))    .\
+            approved()                                      .\
+            count()
+        return ''
+
 # --------------------------------------------------------------------------- #
 
 @register.tag
@@ -148,3 +162,17 @@ def get_comments_list(parser, token):
         )
 
     return CommentsListNode(object=tokens[2], varname=tokens[4])
+
+# --------------------------------------------------------------------------- #
+    
+@register.tag
+def get_comments_count(parser, token):
+    tokens = token.split_contents()
+    length = len(tokens)
+
+    if length is not 5 or tokens[1] != 'for' or tokens[3] != 'as':
+        raise TemplateSyntaxError(
+            '{%% %s for [object] as [varname] %%}' % tokens[0]
+        )
+
+    return CommentsCountNode(object=tokens[2], varname=tokens[4])

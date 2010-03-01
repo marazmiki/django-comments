@@ -8,5 +8,10 @@ urlpatterns = patterns('comments.tests',
         view  = 'templatetags.view_insert_comments',
         name  = 'templatetags_insert_comment',
     ),
+    url(
+        regex = '^templatetags/get_comments_count/$',
+        view  = 'templatetags.view_get_comments_count',
+        name  = 'templatetags_get_comments_count',
+    ),
 ) + comments_urlpatterns
 
