@@ -30,3 +30,12 @@ def update_last_readed_comment(user, content_object):
             readed.save()
 
         return readed.comment
+
+def count_unreaded_comments(object, user):
+    last = LastReadedComment.objects.get_for_user_and_object(user, object)
+
+    return Comment.objects.get_for_object(object).              \
+        filter(pk__gt=last.comment.pk).count() if last else     \
+        count_comments_for_object(object)
+    
+    
