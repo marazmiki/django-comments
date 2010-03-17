@@ -87,8 +87,8 @@ class CommentSettings(CommentBase):
 # --------------------------------------------------------------------------- #
 
 class LastReadedComment(CommentBase):
-    user    = models.OneToOneField(User)
-    comment = models.OneToOneField(Comment)
+    user    = models.ForeignKey(User, related_name='last_readed_comments')
+    comment = models.ForeignKey(Comment, related_name='last_readed_comments')
     objects = LastReadedCommentManager()
 
     def __unicode__(self):
@@ -96,7 +96,7 @@ class LastReadedComment(CommentBase):
 
     class Meta:
         app_label = 'comments'
-        unique_together = ('user', 'content_type', 'object_pk', )
+        unique_together = [('user', 'content_type', 'object_pk', ), ]
 
 # --------------------------------------------------------------------------- #
 
