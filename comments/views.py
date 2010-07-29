@@ -94,7 +94,7 @@ def create(request, parent_id=None):
 
             if request.is_ajax():
                 result.update(
-                    comment = render_to_string('comments/item.html',{'comment': comment, }),
+                    comment = render_to_string('comments/item.html',{'comment': comment, }, context_instance=RequestContext(request)),
                     parent_id = parent.pk if parent else None,
                     comment_id = comment.pk,
                 )

@@ -27,8 +27,8 @@ class CommentBase(models.Model):
 
 class Comment(CommentBase):
     content        = models.TextField()
-    date_created   = models.DateTimeField(blank=True, default=datetime.now())
-    date_changed   = models.DateTimeField(blank=True, default=datetime.now())
+    date_created   = models.DateTimeField(blank=True, default=datetime.now)
+    date_changed   = models.DateTimeField(blank=True, default=datetime.now)
     is_approved    = models.BooleanField(default=True)
     parent_comment = models.ForeignKey('self', blank=True, null=True, related_name='children')
     remote_addr    = models.IPAddressField(blank=True, default='')
@@ -43,12 +43,12 @@ class Comment(CommentBase):
         app_label = 'comments'
         verbose_name = _('Comment')
         verbose_name_plural = _('Comments')
-#        permissions = (
-#            ('can_see_ip',          _('Can see commenting IP')),
-#            ('can_delete_comment',  _('Can delete comment')),
-#            ('can_edit_comment',    _('Can edit comment')),
-#            ('can_approve_comment', _('Can approve and blame comments')),
-#        )
+        permissions = (
+            ('can_see_ip',          unicode(_('Can see commenting IP'))),
+            ('can_delete_comment',  unicode(_('Can delete comment'))),
+            ('can_edit_comment',    unicode(_('Can edit comment'))),
+            ('can_approve_comment', unicode(_('Can approve and blame comments'))),
+        )
 
 # --------------------------------------------------------------------------- #
 
