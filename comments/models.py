@@ -11,7 +11,7 @@ from comments.managers import CommentManager, CommentSettingsManager, LastReaded
 
 # --------------------------------------------------------------------------- #
 
-class CommentBase(models.Model):
+class GenericObject(models.Model):
     content_type   = models.ForeignKey('contenttypes.ContentType')
     object_pk      = models.TextField()
     content_object = generic.GenericForeignKey(
@@ -25,7 +25,7 @@ class CommentBase(models.Model):
 
 # --------------------------------------------------------------------------- #
 
-class Comment(CommentBase):
+class Comment(GenericObject):
     content        = models.TextField()
     date_created   = models.DateTimeField(blank=True, default=datetime.now)
     date_changed   = models.DateTimeField(blank=True, default=datetime.now)
@@ -52,7 +52,7 @@ class Comment(CommentBase):
 
 # --------------------------------------------------------------------------- #
 
-class CommentSettings(CommentBase):
+class CommentSettings(GenericObject):
     premoderate = models.BooleanField(
         default      = PREMODERATE,
         blank        = True,
@@ -86,7 +86,7 @@ class CommentSettings(CommentBase):
 
 # --------------------------------------------------------------------------- #
 
-class LastReadedComment(CommentBase):
+class LastReadedComment(GenericObject):
     user    = models.ForeignKey(User, related_name='last_readed_comments')
     comment = models.ForeignKey(Comment, related_name='last_readed_comments')
     objects = LastReadedCommentManager()
