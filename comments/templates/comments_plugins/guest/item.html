@@ -1,0 +1,13 @@
+{% load i18n %}
+<li id="comment-{{ comment.id }}" class="comment level-{{ comment.level }} tree-{{ comment.tree }}{% if comment.has_replies %} has-replies{% endif %}">
+    <div>
+        {% if comment.website %}
+            <a href="{{ comment.website }}" rel="nofollow">{{ comment.author }}</a>
+        {% else %}
+            <strong>{{ comment.author }}</strong>
+        {% endif %}
+        |
+        {{ comment.date_created|date:"d.m.Y, H:i" }}
+    </div>
+    <div>{{ comment.content }}</div>
+</li>

@@ -1,40 +1,32 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth.models import User
-from django.contrib.contenttypes.models import ContentType
-from comments.models import Comment
+from django.test import TestCase, Client
+from django.core.urlresolvers import reverse
 
-def get_content_object(pk=1):
-    return ContentType.objects.get(pk=pk)
+class CommentViewTest(TestCase):
+    view_name = 'comments_new'
 
-def create_comment(object_id=1):
-    return Comment.objects.create(
-        content_object = get_content_object(object_id),
-        content        = 'Just a test comment',
-        remote_addr    = '127.0.0.1',
-    )
+    def setUp(self):
+        self.client = client.Client()
+        self.url    = reverse(self.view_name)
 
-USERNAME = 'john'
-PASSWORD = 'qwerty123456'
-EMAIL = 'john@doe.com'
+    def get(self, data=dict(), meta=dict(), url=None):
+        return self.client.get(url or self.url, data, **meta)
 
-def create_user(username=USERNAME, password=PASSWORD, email=EMAIL):
-    try:
-        user = User.objects.get(username=username)
-    except User.DoesNotExist:
-        user = User.objects.create_user(
-            username  = username,
-            password = password,
-            email    = email,
-        )
+    def post(self, data=dict(), meta=dict(), url=None):
+        return self.client.post(url or self.url, data, **meta)
 
-    return user
+    def ajax_get(self, data=dict(), meta=dict(), url=None):
+        meta.update(HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        return self.get(data, meta, url)
 
-from comments.tests.environment import *
-from comments.tests.views import *
-from comments.tests.templatetags import *
-from comments.tests.managers import *
-from comments.tests.forms import *
-from comments.tests.settings import *
-from comments.tests.last_readed import *
-from comments.tests.utils import *
+    def ajax_post(self, data=dict(), meta=dict(), url=None):
+        meta.update(HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        return self.post(data, meta, url)
+
+
+# --------------------------------------------------------------------------- #
+
+from .environment import *
+from .views import *
+from comments.plugins.guest.tests import *

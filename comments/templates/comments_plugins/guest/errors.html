@@ -1,0 +1,10 @@
+{% load i18n %}
+{% block content %}
+    <form method="post" action=".">
+        {% csrf_token %}
+        <ul>
+            {{ form.as_ul }}
+            <li><input type="submit" value="{% trans "Send comment" %}" /></li>
+        </ul>
+    </form>
+{% endblock content %}

@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls.defaults import url, patterns
 
 urlpatterns = patterns('comments.views',
     url(
-        regex = '^add/$',
-        view  = 'create',
-        name  = 'comments_create',
+        regex = '^new/$',
+        view  = 'new',
+        name  = 'comments_new'
     ),
     url(
-        regex = '^(?P<parent_id>\d+)/reply/$',
-        view  = 'create',
-        name  = 'comments_reply',
+        regex = '^reply/(?P<parent_id>\d+)/$',
+        view  = 'reply',
+        name  = 'comments_reply'
     ),
 )
-

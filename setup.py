@@ -9,7 +9,11 @@ setup(
     author       = 'Greg Ward',
     author_email = 'gward@python.net',
     url          = 'http://www.python.org/sigs/distutils-sig/',
-    packages     = ['comments', 'comments.admin', 'comments.templatetags', 'comments.tests',
+    packages     = [
+        'comments',
+        'comments.admin',
+        'comments.templatetags',
+        'comments.tests',
     ],
 )
 
