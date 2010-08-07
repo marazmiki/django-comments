@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from comments.forms import forms, CommentForm
-from comments.plugins.guest.models import GuestComment
+from .models import GuestComment
 
 # --------------------------------------------------------------------------- #
 
