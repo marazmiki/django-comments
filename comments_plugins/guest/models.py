@@ -14,6 +14,7 @@ class GuestComment(AbstractComment):
 
     class Meta:
         app_label = 'comments'
+        ordering = ('tree_id', 'lft', 'date_created', )
 
 # --------------------------------------------------------------------------- #
 

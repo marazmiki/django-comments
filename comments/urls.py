@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls.defaults import url, patterns
+from django.conf.urls.defaults import url, patterns, handler404, handler500
 
 urlpatterns = patterns('comments.views',
     url(

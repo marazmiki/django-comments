@@ -15,7 +15,7 @@ class GenericObject(models.Model):
     """
     Базовая модель, обеспечивающая функциональность generic relation
     """
-    object_id      = models.TextField()
+    object_id      = models.CharField(max_length=255)
     content_type   = models.ForeignKey(ContentType)
     content_object = generic.GenericForeignKey(
         ct_field   = 'content_type',
@@ -33,7 +33,7 @@ class AbstractComment(GenericObject):
     """
     Базовая модель комментария
     """
-    parent_comment = models.ForeignKey('self', related_name='childs', null=True, blank=True)
+    parent_comment = models.ForeignKey('self', related_name='replies', null=True, blank=True)
     date_created   = models.DateTimeField(default=datetime.now, editable=False)
     content        = models.TextField(default='')
     remote_addr    = models.IPAddressField(blank=True, null=True)
@@ -46,19 +46,9 @@ class AbstractComment(GenericObject):
         return self.content
 
     class Meta:
+        abstract = True
         app_label = 'comments'
         verbose_name = _('comment')
         verbose_name_plural = _('comments')
-
-
-    class Meta:
-        abstract = True
-
-# --------------------------------------------------------------------------- #
-
-if AbstractComment not in registry:
-    register(AbstractComment,
-        parent_attr = 'parent_comment',
-        order_insertion_by = ['date_created', ],
-    )
+        
     

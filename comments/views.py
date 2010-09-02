@@ -22,8 +22,9 @@ def create(request, content_object, parent_comment=None, scheme='default'):
     Возвращает:
       * Объект HttpResponse    
     """
+
     plugin = get_plugin(scheme)
-    CommentForm = plugin.get_form()
+    CommentForm = plugin.get_form(request)
 
     if request.method == 'POST':
         form = CommentForm(request.POST, request.FILES)
@@ -40,13 +41,21 @@ def create(request, content_object, parent_comment=None, scheme='default'):
                 )
 
             comment.save()
+            
             return plugin.on_success(request, form, comment)
 
-        else:
-            return plugin.on_failure(request, form)
+        # Failure
+        return plugin.on_failure(request, form)
+
 
     else:
-        form = CommentForm(initial={'redirect_to': ''})
+        form = CommentForm(
+            initial = dict(
+                redirect_to  = '',
+                content_type = parent_comment.content_type.id,
+                object_id    = content_object.id,
+            )
+        )
         return plugin.on_get_request(request, form, content_object, parent_comment)
 
 # --------------------------------------------------------------------------- #
@@ -69,7 +78,7 @@ def new(request, scheme='default'):
     #      из словаря POST приводят к тому, что при GET-запросе на страницу 
     #      создания нового комментария будет генерироваться ошибка 404.
     #      И это вполне нормальное поведение.
-
+  
     return create(request,
         content_object = get_object_or_404(
             get_object_or_404(ContentType, pk=content_type).model_class(),

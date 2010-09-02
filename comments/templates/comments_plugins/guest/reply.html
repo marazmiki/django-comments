@@ -1,0 +1,17 @@
+{% load i18n %}
+{% block content %}
+    <h1>Reply to comment</h1>
+    <dl>
+        <dt>Content object</dt>
+        <dd>{{ object }}</dd>
+        <dt>Parent comment</dt>
+        <dd>{{ parent_comment }}</dd>
+    </dl>
+    <form method="post" action="{{ request.path_info }}">
+        {% csrf_token %}
+        <ul>
+            {{ form.as_ul }}
+            <li><input type="submit" value="{% trans "Send reply" %}" /></li>
+        </ul>
+    </form>
+{% endblock content %}

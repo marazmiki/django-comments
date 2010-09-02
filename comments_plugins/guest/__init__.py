@@ -13,7 +13,7 @@ from .models import GuestComment
 # --------------------------------------------------------------------------- #
 
 class GuestCommentPlugin(CommentPlugin):
-    def get_form(self):
+    def get_form(self, request=None):
         return GuestCommentForm
 
     def get_model(self):
@@ -85,4 +85,13 @@ class GuestCommentPlugin(CommentPlugin):
             context_instance=RequestContext(request),
         )
         
-        
+    def on_get_request(self, request, form, content_object, parent_comment=None):
+        return render_to_response('comments_plugins/guest/reply.html',
+            dict(
+                form = form,
+                object = content_object,
+                parent_comment = parent_comment
+            ),
+            context_instance=RequestContext(request),
+        )
+

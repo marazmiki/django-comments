@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -11,10 +11,13 @@ class CommentPlugin(object):
     Базовый класс плагина к системе комментирования
 
     """
-    def get_form(self):
+    def get_form(self, request=None):
         """
         Возвращает объект формы для отправки комментария, которую будет
         использовать плагин.
+
+        Принимает следующие параметры:
+          * request Объект django.http.HttpRequest
 
         Возвращает:
           * Объект django.db.models.ModelForm
@@ -30,6 +33,19 @@ class CommentPlugin(object):
           * Объект django.db.models.Model
         """
         raise NotImplementedError('Please implement get_model() function')
+
+    def queryset(self, content_object):
+        """
+        Возвращает QuerySet для получения дерева комментариев к
+        объекту content_object
+
+        Принимает следующие параметры:
+          * content_object
+
+        Возвращает:
+          * Объект django.db.models.query.QuerySet
+        """
+        return self.get_model().objects.get_for_object(content_object)#.order_by('tree_id', 'lft', 'date_created')
 
     def on_success(self, request, form, comment):
         """
@@ -59,7 +75,7 @@ class CommentPlugin(object):
         """
         raise NotImplementedError('Please implement on_failure hook')
 
-    def on_get_request(self, request, form, content_object):
+    def on_get_request(self, request, form, content_object, parent_comment=None):
         """
         Обработчик, вызываемый в случае запроса страницы создания
         комментария методом GET
@@ -68,6 +84,7 @@ class CommentPlugin(object):
           * request
           * form
           * content_object
+          * parent_comment
 
         Возвращает:
           * Объект HttpResponse

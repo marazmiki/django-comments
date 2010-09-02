@@ -29,5 +29,7 @@ class CommentViewTest(TestCase):
 
 from .environment import *
 from .views import *
+from .templatetags import *
+
 from comments_plugins.guest.tests import *
-#from comments_plugins.authorized.tests import *
+from comments_plugins.authorized.tests import *

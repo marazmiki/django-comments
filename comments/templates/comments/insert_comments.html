@@ -1,0 +1,28 @@
+{% load i18n comments_tags %}
+
+<div id="comments">
+    <h4>{% trans "Comments"%}</h4>
+
+    <ul id="comments-list">
+        {% get_comments for object as comments %}
+        {% for comment in comments %}
+            <li id="comment-{{ comment.id }}" class="comment level-{{ comment.level }}">
+                <div>{{ comment.date_created|date:"d.m.Y H:i" }}</div>
+                <div>{{ comment.content }}</div>
+                <div><a href="{% url comments_reply parent_id=comment.pk %}">{% trans "Reply on this" %}</a></div>
+            </li>
+        {% empty %}
+            <li class="no-comments">
+                {% trans "There is no comments" %}
+            </li>
+        {% endfor %}
+    </ul>
+    <h4>{% trans "Write your own comment" %} | {{ schema }}</h4>
+    <form method="post" action="{% comment_form_action for schema schema %}">
+        {% csrf_token %}
+        <ul>
+            {{  form.as_ul  }}
+            <li><input type="submit" value="{% trans "Submit comment" %}" /></li>
+        </ul>
+    </form>
+</div>
