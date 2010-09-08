@@ -3,7 +3,7 @@
 from django.http import HttpResponse
 from django.template import Template, Context, TemplateSyntaxError
 from django.core.urlresolvers import reverse
-from comments.tests import TestCase, CommentViewTest, views
+from comments.tests import TestCase, CommentViewTest, views, models
 
 class InsertCommentsTestCase(CommentViewTest):    
     """ 
@@ -12,10 +12,7 @@ class InsertCommentsTestCase(CommentViewTest):
     """
     urls = 'comments.tests.urls'
     view_name = 'test_view_insert_comment_brief'
-
-    def render(self, template, context):
-        return Template(template).render(Context(context))
-        
+       
     def test_syntax_ok_brief(self):
         resp = self.get()        
         self.assertEquals(200, resp.status_code)      
@@ -31,6 +28,7 @@ class InsertCommentsTestCase(CommentViewTest):
         тег вызывается синтаксически некорректно
         """
         templates = [
+            '{% insert_comments f0r object %}',
             '{% insert_comments for %}',
             '{% insert_comments for object with %}',
             '{% insert_comments for object w1th %}',            

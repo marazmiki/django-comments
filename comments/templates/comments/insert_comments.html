@@ -6,7 +6,7 @@
     <ul id="comments-list">
         {% get_comments for object as comments %}
         {% for comment in comments %}
-            <li id="comment-{{ comment.id }}" class="comment level-{{ comment.level }}">
+            <li id="comment-{{ comment.id }}" class="comment level-{{ comment.level }}{% if comment.parent_id%} reply-to-{{ comment.parent_id }}{% endif %}">
                 <div>{{ comment.date_created|date:"d.m.Y H:i" }}</div>
                 <div>{{ comment.content }}</div>
                 <div><a href="{% url comments_reply parent_id=comment.pk %}">{% trans "Reply on this" %}</a></div>
@@ -17,7 +17,7 @@
             </li>
         {% endfor %}
     </ul>
-    <h4>{% trans "Write your own comment" %} | {{ schema }}</h4>
+    <h4>{% trans "Write your own comment" %}</h4>
     <form method="post" action="{% comment_form_action for schema schema %}">
         {% csrf_token %}
         <ul>

@@ -98,15 +98,15 @@ def comment_form_action(parser, token):
             raise TemplateSyntaxError('First arg must be eigher "as" or "for"')
 
         if bits[1] == 'as':
-            if length < 3:
-                raise TemplateSyntaxError(
-                    'Variable for %s (after "AS") not specified' % bits[0]
-                )
+#            if length < 3:
+#                raise TemplateSyntaxError(
+#                    'Variable for %s (after "AS") not specified' % bits[0]
+#                )
             varname = bits[2]
 
         else:
-            if length < 4:
-                raise TemplateSyntaxError('Schema name not specified')
+#            if length < 4:
+#                raise TemplateSyntaxError('Schema name not specified')
 
             if  bits[2] != 'schema':
                 raise TemplateSyntaxError('After "for" must follow "schema" ')

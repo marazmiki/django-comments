@@ -31,7 +31,7 @@ def insert_comments_full(request):
     
     """
     return HttpResponse(
-        render('{% insert_comments for object by schema schema %}', dict(
+        render('{% insert_comments for object with schema schema %}', dict(
                 object  = ContentObject.objects.create(title='Title'),
                 request = request,
                 schema  = 'default',

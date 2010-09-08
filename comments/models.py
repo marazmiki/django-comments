@@ -42,6 +42,9 @@ class AbstractComment(GenericObject):
     def has_replies(self):
         return self.rght - self.lft > 1
 
+    def parent_id(self):
+        return self.__dict__['parent_comment_id']
+
     def __unicode__(self):
         return self.content
 

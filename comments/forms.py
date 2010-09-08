@@ -12,10 +12,8 @@ class CommentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CommentForm, self).__init__(*args, **kwargs)
-
         self.fields['object_id'].widget    = forms.HiddenInput()
         self.fields['content_type'].widget = forms.HiddenInput()
-
 
     class Meta:
         model = Comment

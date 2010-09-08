@@ -2,6 +2,7 @@
 
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
+from django.template import Template, Context
 
 class CommentViewTest(TestCase):
     view_name = 'comments_new'
@@ -24,6 +25,8 @@ class CommentViewTest(TestCase):
         meta.update(HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         return self.post(data, meta, url)
 
+    def render(self, template, context):
+        return Template(template).render(Context(context))
 
 # --------------------------------------------------------------------------- #
 
