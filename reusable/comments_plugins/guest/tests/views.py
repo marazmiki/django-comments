@@ -2,9 +2,9 @@
 
 from django.utils import simplejson
 from django.contrib.contenttypes.models import ContentType
-from comments.plugins import get_plugin
-from comments.tests import CommentViewTest, client, reverse
-from comments.tests.models import ContentObject
+from reusable.comments.plugins import get_plugin
+from reusable.comments.tests import CommentViewTest, client, reverse
+from reusable.comments.tests.models import ContentObject
 
 # --------------------------------------------------------------------------- #
 

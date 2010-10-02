@@ -3,14 +3,14 @@
 from django.http import HttpResponse
 from django.template import Template, Context, TemplateSyntaxError
 from django.core.urlresolvers import reverse
-from comments.tests import TestCase, CommentViewTest, views, models
+from reusable.comments.tests import TestCase, CommentViewTest, views, models
 
 class InsertCommentsTestCase(CommentViewTest):    
     """ 
     {% insert_comments for [object] %}
     {% insert_comments for [object] with schema [schema] %}
     """
-    urls = 'comments.tests.urls'
+    urls = 'reusable.comments.tests.urls'
     view_name = 'test_view_insert_comment_brief'
        
     def test_syntax_ok_brief(self):

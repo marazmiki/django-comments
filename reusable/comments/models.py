@@ -7,7 +7,7 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from mptt import register, registry
-from comments.managers import GenericObjectManager
+from reusable.comments.managers import GenericObjectManager
 
 # --------------------------------------------------------------------------- #
 

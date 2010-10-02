@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls.defaults import *
-from comments.urls import urlpatterns as comments_urlpatterns
+from reusable.comments.urls import urlpatterns as comments_urlpatterns
 
-urlpatterns = patterns('comments.tests.views',
+urlpatterns = patterns('reusable.comments.tests.views',
     url(
         regex = '^templatetags/insert_comments_brief/$',
         view  = 'insert_comments_brief',

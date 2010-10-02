@@ -3,7 +3,7 @@
 from django.http import HttpResponse
 from django.template import Template, Context, TemplateSyntaxError
 from django.core.urlresolvers import reverse
-from comments.tests import TestCase, CommentViewTest, views
+from reusable.comments.tests import TestCase, CommentViewTest, views
 
 # --------------------------------------------------------------------------- #
 

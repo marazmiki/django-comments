@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.simplejson import dumps
 from django.template import RequestContext, loader
 from django.contrib import messages
-from comments.plugins import CommentPlugin
+from reusable.comments.plugins import CommentPlugin
 from .forms import GuestCommentForm
 from .models import GuestComment
 

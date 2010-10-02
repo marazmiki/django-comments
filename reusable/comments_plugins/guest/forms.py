@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from comments.forms import forms, CommentForm
+from reusable.comments.forms import forms, CommentForm
 from .models import GuestComment
 
 # --------------------------------------------------------------------------- #

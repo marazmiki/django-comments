@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.template import Template, Context, add_to_builtins, TemplateSyntaxError
-from comments.tests.models import ContentObject
+from reusable.comments.tests.models import ContentObject
 
 add_to_builtins('django.templatetags.i18n')
-add_to_builtins('comments.templatetags.comments_tags')
+add_to_builtins('reusable.comments.templatetags.comments_tags')
 
 # --------------------------------------------------------------------------- #
 

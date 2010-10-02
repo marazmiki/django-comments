@@ -1,5 +1,5 @@
 from django.db import models
-from comments import models as comments_models
+from reusable.comments import models as comments_models
 
 class ContentObject(models.Model):
     title = models.CharField(max_length=255)

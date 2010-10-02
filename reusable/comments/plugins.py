@@ -119,7 +119,7 @@ def get_plugin(scheme='default'):
     Возвращает:
       * class
     """
-    class_name = 'comments_plugins.guest.GuestCommentPlugin' # @FIXIT
+    class_name = 'reusable.comments_plugins.guest.GuestCommentPlugin' # @FIXIT
 
     try:
         plugin = str_to_class(class_name)()

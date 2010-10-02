@@ -34,5 +34,5 @@ from .environment import *
 from .views import *
 from .templatetags import *
 
-from comments_plugins.guest.tests import *
-from comments_plugins.authorized.tests import *
+from reusable.comments_plugins.guest.tests import *
+from reusable.comments_plugins.authorized.tests import *

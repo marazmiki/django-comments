@@ -2,8 +2,8 @@
 
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
-from comments.models import AbstractComment
-from comments.plugins import register
+from reusable.comments.models import AbstractComment
+from reusable.comments.plugins import register
 
 # --------------------------------------------------------------------------- #
 

@@ -2,7 +2,7 @@
 
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.contenttypes.models import ContentType
-from comments.plugins import get_plugin
+from reusable.comments.plugins import get_plugin
 
 # --------------------------------------------------------------------------- #
 

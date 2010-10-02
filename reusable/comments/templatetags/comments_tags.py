@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template import Node, Library, Variable, TemplateSyntaxError, RequestContext
 from django.template.loader import render_to_string
-from comments.plugins import get_plugin
+from reusable.comments.plugins import get_plugin
 
 # --------------------------------------------------------------------------- #
 

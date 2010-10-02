@@ -3,7 +3,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.models import ContentType
-from comments.models import AbstractComment as Comment
+from reusable.comments.models import AbstractComment as Comment
 
 # --------------------------------------------------------------------------- #
 

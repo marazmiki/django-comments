@@ -3,7 +3,7 @@
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase, client
-from comments.tests.models import ContentObject 
+from reusable.comments.tests.models import ContentObject 
 
 # --------------------------------------------------------------------------- #
 
