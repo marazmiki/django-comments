@@ -37,7 +37,7 @@ class InsertCommentsNode(Node):
             dict(
                 schema = schema,
                 object = object,
-                form   = plugin.get_form(request)(initial={'content_type': ctype.id, 'object_id':object.id  }),
+                form   = plugin.get_form(request)(request=request,initial={'content_type': ctype.id, 'object_id':object.id  }),
             ),
             context_instance = RequestContext(request)
         )

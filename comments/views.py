@@ -27,7 +27,7 @@ def create(request, content_object, parent_comment=None, scheme='default'):
     CommentForm = plugin.get_form(request)
 
     if request.method == 'POST':
-        form = CommentForm(request.POST, request.FILES)
+        form = CommentForm(request.POST, request.FILES, request=request)
 
         if form.is_valid():
             comment = form.save(commit=False)
@@ -50,6 +50,7 @@ def create(request, content_object, parent_comment=None, scheme='default'):
 
     else:
         form = CommentForm(
+            request = request,
             initial = dict(
                 redirect_to  = '',
                 content_type = parent_comment.content_type.id,
