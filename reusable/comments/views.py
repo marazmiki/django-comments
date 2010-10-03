@@ -35,11 +35,18 @@ def create(request, content_object, parent_comment=None, scheme='default'):
             comment.forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 
             if parent_comment:
-                comment.insert_at(parent_comment,
-                    position = 'last-child',
-                    commit   = False,
-                )
-
+                # compatible stuff
+                from mptt import VERSION
+                if VERSION < (0, 4, 0):
+                    comment.insert_at(parent_comment,
+                        position = 'last-child',
+                        commit   = False,
+                    )
+                else:
+                    comment.insert_at(parent_comment,
+                        position = 'last-child',
+                        save   = False,
+                    )
             comment.save()
             
             return plugin.on_success(request, form, comment)

@@ -2,7 +2,6 @@
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from mptt import register as mptt_register, registry as mptt_registry
 
 # --------------------------------------------------------------------------- #
 
@@ -145,8 +144,12 @@ def register(model):
     Принимает следущие аргументы:
       * django.db.models.Model
     """
-    if model not in mptt_registry:
-        mptt_register(model,
-            parent_attr        = 'parent_comment',
-            order_insertion_by = ['date_created', ],
-        )
+    try:
+        from mptt import register as mptt_register, registry as mptt_registry
+        if model not in mptt_registry:
+            mptt_register(model,
+                parent_attr        = 'parent', #'parent_comment',
+                order_insertion_by = ['date_created', ],
+            )
+    except ImportError:
+        pass
