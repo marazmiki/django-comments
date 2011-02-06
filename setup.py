@@ -81,13 +81,13 @@ if len(sys.argv) > 1 and sys.argv[1] == 'bdist_wininst':
 
 setup(
     name         = 'django-comments',
-    version      = '0.2a',
+    version      = '0.3.3a',
     description  = 'Reusable django application for threading comments based on django-mptt',
     author       = 'marazmiki',
     author_email = 'marazmiki@gmail.com',
     license      = 'BSD',
     url          = 'http://bitbucket.org/marazmiki/django-comments',
-    requires     = ['django', 'mptt'],
+    requires     = ['django (>=1.2.3)', 'django_mptt (>0.3,<0.4)'],
     #download_url = 'http://media.djangoproject.com/releases/1.2/Django-1.2.1.tar.gz',
     packages = packages,
     cmdclass = cmdclasses,

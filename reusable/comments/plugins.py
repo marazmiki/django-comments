@@ -2,6 +2,7 @@
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from mptt import register as mptt_register, registry as mptt_registry
 
 # --------------------------------------------------------------------------- #
 
@@ -44,8 +45,22 @@ class CommentPlugin(object):
         Возвращает:
           * Объект django.db.models.query.QuerySet
         """
-        return self.get_model().objects.get_for_object(content_object)#.order_by('tree_id', 'lft', 'date_created')
+        return self.get_model().objects.get_for_object(content_object)#.order_by('tree_id', 'lft', 'date_created')       
 
+    def on_success_before_save(self, request, form, comment):
+        """
+        Обработчик, вызываемый до вставки комментария, если форма валидна
+
+        Принимает следующие параметры:
+          * request
+          * form
+          * comment
+
+        Возвращает:
+          * Объект HttpResponse
+        """
+        
+        
     def on_success(self, request, form, comment):
         """
         Обработчик, вызываемый после успешного создании комментария
@@ -118,8 +133,16 @@ def get_plugin(scheme='default'):
     Возвращает:
       * class
     """
-    class_name = 'reusable.comments_plugins.guest.GuestCommentPlugin' # @FIXIT
+    COMMENTS_DEFAULT_PLUGIN = getattr(settings, 'COMMENTS_DEFAULT_PLUGIN', 'reusable.comments_plugins.guest.GuestCommentPlugin')
+    COMMENTS_PLUGINS = getattr(settings, 'COMMENTS_PLUGINS', {
+        'default': COMMENTS_DEFAULT_PLUGIN,
+    })
 
+    scheme = scheme or 'default'
+    if scheme in COMMENTS_PLUGINS:
+        class_name = COMMENTS_PLUGINS[scheme]
+    else:
+        raise ImproperlyConfigured("No schema named '%s' " % scheme)
     try:
         plugin = str_to_class(class_name)()
 
@@ -144,12 +167,8 @@ def register(model):
     Принимает следущие аргументы:
       * django.db.models.Model
     """
-    try:
-        from mptt import register as mptt_register, registry as mptt_registry
-        if model not in mptt_registry:
-            mptt_register(model,
-                parent_attr        = 'parent', #'parent_comment',
-                order_insertion_by = ['date_created', ],
-            )
-    except ImportError:
-        pass
+    if model not in mptt_registry:
+        mptt_register(model,
+            parent_attr        = 'parent_comment',
+            order_insertion_by = ['date_created', ],
+        )

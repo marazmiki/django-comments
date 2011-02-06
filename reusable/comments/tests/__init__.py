@@ -33,6 +33,7 @@ class CommentViewTest(TestCase):
 from .environment import *
 from .views import *
 from .templatetags import *
+from .plugins import *
 
 from reusable.comments_plugins.guest.tests import *
 from reusable.comments_plugins.authorized.tests import *

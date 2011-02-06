@@ -33,7 +33,7 @@ def create(request, content_object, parent_comment=None, scheme='default'):
             comment = form.save(commit=False)
             comment.remote_addr   = request.META.get('REMOTE_ADDR')
             comment.forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-
+            
             if parent_comment:
                 # compatible stuff
                 from mptt import VERSION
@@ -47,6 +47,8 @@ def create(request, content_object, parent_comment=None, scheme='default'):
                         position = 'last-child',
                         save   = False,
                     )
+
+            plugin.on_success_before_save(request, form, comment)
             comment.save()
             
             return plugin.on_success(request, form, comment)
