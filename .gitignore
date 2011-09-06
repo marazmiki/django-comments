@@ -5,3 +5,5 @@
 .pydevsettings
 *.pyc
 *.swp
+*.bak
+*.zip
