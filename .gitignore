@@ -1,0 +1,7 @@
+.hg
+.hgignore
+.settings
+.project
+.pydevsettings
+*.pyc
+*.swp
