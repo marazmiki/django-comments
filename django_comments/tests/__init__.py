@@ -5,8 +5,8 @@ from django.conf import settings
 from django.contrib import comments as django_comments
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpRequest
-from comments.plugins import plugin_pool
-from comments.exceptions import AlreadyRegistered, NoSuchPlugin
+from django_comments.plugins import plugin_pool
+from django_comments.exceptions import AlreadyRegistered, NoSuchPlugin
 
 class EnvironmentTest(test.TestCase):
     """
@@ -37,4 +37,4 @@ class DjangoDefaultCommentsTest(test.TestCase):
         assert self.plugin.get_urlpatterns() is django_comments.urls.urlpatterns
 
 
-from comments.tests.plugin_pool import *
+from django_comments.tests.plugin_pool import *

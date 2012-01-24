@@ -2,10 +2,9 @@
 
 from django import test
 from django.core.exceptions import ImproperlyConfigured
-from comments.plugins import plugin_pool
-from comments.exceptions import NoSuchPlugin, AlreadyRegistered
-from comments.defaults import DjangoCommentPlugin
-
+from django_comments.plugins import plugin_pool
+from django_comments.exceptions import NoSuchPlugin, AlreadyRegistered
+from django_comments.defaults import DjangoCommentPlugin
 
 class RegisterPluginsTest(test.TestCase):
     """

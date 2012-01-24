@@ -1,6 +1,5 @@
 from django.conf.urls.defaults import *
-from comments.plugins import plugin_pool
-
+from django_comments.plugins import plugin_pool
 
 class URLConf(object):
     """

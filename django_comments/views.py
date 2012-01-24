@@ -2,7 +2,7 @@
 
 from django.http import HttpResponse
 from django.core.exceptions import ImproperlyConfigured
-from comments.compat import View
+from django.views.generic import View
 
 class CreateView(View):
     """

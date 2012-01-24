@@ -2,8 +2,8 @@
 
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.importlib import import_module
-from comments.exceptions import AlreadyRegistered, NoSuchPlugin
-from comments.views import CreateView
+from django_comments.exceptions import AlreadyRegistered, NoSuchPlugin
+from django_comments.views import CreateView
 
 class BasePlugin(object):
     """

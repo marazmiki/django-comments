@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from distutils.core import setup
+from setuptools import setup, find_packages
+from django_comments import get_version
 import os
 
-version='0.5'
-package = 'comments'
+package = 'django_comments'
 
 setup(
     name = 'django-comments',
-    version = version,
+    version = get_version(),
     author  = 'marazmiki',
     author_email = 'marazmiki@gmail.com',
     url = 'http://pypi.python.org/pypi/django-comments',
