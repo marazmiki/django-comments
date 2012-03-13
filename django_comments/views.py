@@ -3,7 +3,10 @@
 from django.http import HttpResponse
 from django.core.exceptions import ImproperlyConfigured
 from django.views.generic import View
-from django_comments.signals import *
+from django_comments.signals import form_invalid as form_invalid_signal,\
+    form_valid as form_valid_signal, before_save as before_save_signal,\
+    after_save as after_save_signal
+
 
 class CreateView(View):
     """
@@ -38,19 +41,19 @@ class CreateView(View):
         """
         object = self.get_content_object(request, self.kwargs)
         form = self.plugin.get_form(request, self.kwargs)(
-                                    request.POST or None,
-                                    request.FILES or None)
+            request.POST or None,
+            request.FILES or None)
         if form.is_valid():
-            form_valid.send(request=request, form=form, content_object=object)
+            form_valid_signal.send(request=request, form=form, content_object=object, sender=None)
             comment = form.save(commit=False)
 
             if getattr(self.plugin, 'content_object_field') and object:
                 setattr(comment, self.plugin.content_object_field, object)
 
             # Before save hook
-            before_save.send(request=request, form=form, content_object=object, comment=comment)
+            before_save_signal.send(request=request, form=form, content_object=object, comment=comment, sender=None)
             before_save = self.before_save(request, form, comment,
-                                           self.kwargs)
+                self.kwargs)
             if type(before_save) is HttpResponse:
                 return before_save
 
@@ -58,17 +61,17 @@ class CreateView(View):
             comment.save()
 
             # After save hook
-            after_save.send(request=request, form=form, content_object=object, comment=comment)
+            after_save_signal.send(request=request, form=form, content_object=object, comment=comment, sender=None)
             response = self.after_save(request, form, comment, self.kwargs)
 
             if isinstance(response, HttpResponse):
                 return response
 
-            raise ImproperlyConfigured, 'after_save method must ' \
+            raise ImproperlyConfigured, 'after_save method must '\
                                         'return a HttpResponse instance'
         # Form validation error happens
         else:
-            form_invalid(request=request, form=form, content_object=object)
+            form_invalid_signal(request=request, form=form, content_object=object, sender=sender)
             return self.failure(request, form, object, self.kwargs)
 
     def before_save(self, request, form, comment, kwargs={}):
