@@ -3,6 +3,7 @@
 from django.http import HttpResponse
 from django.core.exceptions import ImproperlyConfigured
 from django.views.generic import View
+from django_comments.signals import *
 
 class CreateView(View):
     """
@@ -40,12 +41,14 @@ class CreateView(View):
                                     request.POST or None,
                                     request.FILES or None)
         if form.is_valid():
+            form_valid.send(request=request, form=form, content_object=object)
             comment = form.save(commit=False)
 
             if getattr(self.plugin, 'content_object_field') and object:
                 setattr(comment, self.plugin.content_object_field, object)
 
             # Before save hook
+            before_save.send(request=request, form=form, content_object=object, comment=comment)
             before_save = self.before_save(request, form, comment,
                                            self.kwargs)
             if type(before_save) is HttpResponse:
@@ -55,6 +58,7 @@ class CreateView(View):
             comment.save()
 
             # After save hook
+            after_save.send(request=request, form=form, content_object=object, comment=comment)
             response = self.after_save(request, form, comment, self.kwargs)
 
             if isinstance(response, HttpResponse):
@@ -64,7 +68,8 @@ class CreateView(View):
                                         'return a HttpResponse instance'
         # Form validation error happens
         else:
-            return self.failure(request, form, object, self.kwargs)        
+            form_invalid(request=request, form=form, content_object=object)
+            return self.failure(request, form, object, self.kwargs)
 
     def before_save(self, request, form, comment, kwargs={}):
         """

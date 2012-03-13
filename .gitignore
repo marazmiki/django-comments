@@ -1,8 +1,10 @@
+dist/
 .hg
 .hgignore
 .settings
 .project
 .pydevsettings
+*.egg-info/
 *.pyc
 *.swp
 *.bak
