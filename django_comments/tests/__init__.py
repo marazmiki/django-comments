@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 from django import test
 from django.conf import settings
@@ -8,16 +8,18 @@ from django.http import HttpRequest
 from django_comments.plugins import plugin_pool
 from django_comments.exceptions import AlreadyRegistered, NoSuchPlugin
 
+
 class EnvironmentTest(test.TestCase):
     """
     Environment test cases
     """
+
     def test_request_context_processors_installed(self):
         """
         Tests that `request` context processor is installed
         """
-        assert 'django.core.context_processors.request' in \
-        settings.TEMPLATE_CONTEXT_PROCESSORS
+        self.assertIn('django.core.context_processors.request',
+                      settings.TEMPLATE_CONTEXT_PROCESSORS)
 
 
 class DjangoDefaultCommentsTest(test.TestCase):

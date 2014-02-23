@@ -1,4 +1,13 @@
-VERSION = (1, 0, 0, 'b')
+# coding: utf-8
+
+from __future__ import unicode_literals
+
+VERSION = (2, 0, 0, 'b')
+
 
 def get_version():
-    return u'.'.join(map(unicode, VERSION))
+    return '.'.join(map(unicode, VERSION))
+
+
+__author__ = 'Mikhail Porokhovnichenko'
+__version__ = get_version()

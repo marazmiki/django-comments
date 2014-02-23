@@ -10,6 +10,7 @@ class RegisterPluginsTest(test.TestCase):
     """
     Test cases for registering plugin class in pool
     """
+
     def test_raise_improperly_configured_exception_if_no_module(self):
         """
         Tests that ImproperlyConfigured exception is raised when 
@@ -32,7 +33,7 @@ class RegisterPluginsTest(test.TestCase):
             """
             Raises exception
             """
-            plugin_pool.register('comments.defaults.DjangoCommentPlugin_')
+            plugin_pool.register('django_comments.defaults.DjangoCommentPlugin_')
 
         self.assertRaises(ImproperlyConfigured, raises)
 
@@ -45,8 +46,8 @@ class RegisterPluginsTest(test.TestCase):
             """
             Raises exception
             """
-            plugin_pool.register('comments.defaults.DjangoCommentPlugin')
-            plugin_pool.register('comments.defaults.DjangoCommentPlugin')
+            plugin_pool.register('django_comments.defaults.DjangoCommentPlugin')
+            plugin_pool.register('django_comments.defaults.DjangoCommentPlugin')
         self.assertRaises(AlreadyRegistered, raises)
 
     def test_raise_value_error_if_wrong_plugin_class(self):

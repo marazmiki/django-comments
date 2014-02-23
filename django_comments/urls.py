@@ -1,11 +1,13 @@
-from django.conf.urls.defaults import *
+# coding: utf-8
+
 from django_comments.plugins import plugin_pool
+
 
 class URLConf(object):
     """
     Comment URLConf class
-
     """
+
     def __init__(self, codename):
         """
         The class constructor
@@ -16,15 +18,15 @@ class URLConf(object):
         """
         Returns plugin URL patterns
         """
-        return self.plugin.get_urlpatterns()   
+        return self.plugin.get_urlpatterns()
 
 
 def comments_urlpatterns():
     """
     Returns list of all urls
     """
-    urlpatterns = patterns('', )
-
+    urlpatterns = []
+    return []
     for codename in plugin_pool.get_all_plugins():
         urlpatterns += URLConf(codename).get_urls()
     return urlpatterns
