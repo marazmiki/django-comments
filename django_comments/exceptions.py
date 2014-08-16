@@ -2,12 +2,8 @@
 
 
 class AlreadyRegistered(Exception):
-    """
-    Raise when tries to register plugin that has being registered
-    """
+    pass
 
 
 class NoSuchPlugin(Exception):
-    """
-    Raises when tries get non-existant plugin class
-    """
+    pass

@@ -25,11 +25,7 @@ def comments_urlpatterns():
     """
     Returns list of all urls
     """
-    urlpatterns = []
-    return []
-    for codename in plugin_pool.get_all_plugins():
-        urlpatterns += URLConf(codename).get_urls()
-    return urlpatterns
+    return [url for urls in plugin_pool.get_all_plugins() for url in URLConf(c).get_urls()]
 
 
 urlpatterns = comments_urlpatterns()

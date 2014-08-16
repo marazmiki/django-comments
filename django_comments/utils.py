@@ -8,6 +8,8 @@ import sys
 try:
     from django.utils.module_loading import import_by_path
 except ImportError:
+    from django.utils.importlib import import_module
+
     def import_by_path(dotted_path, error_prefix=''):
         """
         Import a dotted module path and return the attribute/class designated by the

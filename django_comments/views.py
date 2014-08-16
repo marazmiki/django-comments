@@ -2,7 +2,7 @@
 
 from django.http import HttpResponse
 from django.core.exceptions import ImproperlyConfigured
-from django.views.generic.base import FormView
+from django.views.generic.edit import FormView
 from django_comments.signals import (form_invalid, form_valid, before_save,
                                      after_save)
 
@@ -22,6 +22,12 @@ class CreateCommentView(FormView):
         """
         Returns comments plugin instance
         """
+
+    def get_form_class(self):
+        """
+        Returns form class
+        """
+        return self.get_plugin().get_form_class(self.request)
 
     def form_invalid(self, form):
         """
@@ -48,7 +54,8 @@ class CreateCommentView(FormView):
                         content_object=content_object,
                         request=self.request)
 
-        comment = plugin.prepare_object(form=form, content_object=content_object)
+        comment = plugin.prepare_object(request=self.request,
+                                        form=form, content_object=content_object)
 
         before_save.send(sender=None, form=form, content_object=content_object,
                          request=self.request)
@@ -64,14 +71,8 @@ class CreateCommentView(FormView):
                         comment=comment, request=self.request)
 
         response = self.after_save(form, comment, self.kwargs)
-#
-#            if isinstance(response, HttpResponse):
-#                return response
-#
-#            raise ImproperlyConfigured, 'after_save method must '\
-#                                        'return a HttpResponse instance'
 
-
-
-
-
+        if isinstance(response, HttpResponse):
+            return response
+        raise ImproperlyConfigured('after_save method must return a '
+                                   'HttpResponse instance')
