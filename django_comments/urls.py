@@ -1,31 +1,25 @@
 # coding: utf-8
 
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
 from django_comments.plugins import plugin_pool
 
 
 class URLConf(object):
-    """
-    Comment URLConf class
-    """
-
     def __init__(self, codename):
-        """
-        The class constructor
-        """
         self.plugin = plugin_pool.get_plugin(codename)
 
     def get_urls(self):
-        """
-        Returns plugin URL patterns
-        """
         return self.plugin.get_urlpatterns()
 
 
 def comments_urlpatterns():
-    """
-    Returns list of all urls
-    """
-    return [url for urls in plugin_pool.get_all_plugins() for url in URLConf(c).get_urls()]
+    found_urlpatterns = []
+    for plugin in plugin_pool.get_all_plugins():
+        found_urlpatterns += URLConf(plugin).get_urls()
+    return found_urlpatterns
 
 
 urlpatterns = comments_urlpatterns()

@@ -1,70 +1,64 @@
 # coding: utf-8
 
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
 from django.core.exceptions import ImproperlyConfigured
 from django.forms.models import modelform_factory
 from django_comments.views import CreateCommentView
 
 
-class BasePlugin(object):
-    """
-    Base plugin class
-    """
-    codename = ''
-    model = None
-    queryset = None
-    form_class = None
-    template_name = None
-
+class AbstractBasePlugin(object):
     def __init__(self, *args, **kwargs):
-        """
-        The class constructor
-        """
-        if not self.codename:
-            raise ImproperlyConfigured('Comment plugin must have '
-                                       'the `codename` attribute')
+        pass
 
-    def get_model(self, request):
-        """
-        Returns the comment model class
-        """
-        if self.model:
-            return self.model
-        raise NotImplementedError('Please define `model` attribute '
-                                  'or override get_model() method')
+    def get_model(self):
+        raise NotImplementedError()
 
-    def get_queryset(self, request, content_object):
-        """
-        Returns the comments queryset. Usable for comments list
-        """
-        if self.queryset:
-            return self.queryset
-        return self.get_model(request)._defaul_manager.all()
+    def get_queryset(self):
+        raise NotImplementedError()
 
-    def get_comments_count(self, request, content_object):
-        """
-        Returns number of comments for given `content_object`
-        """
-        return self.get_queryset(request, content_object).count()
-
-    def get_form_class(self, request):
-        """
-        Returns the comment model form class
-        """
-        if self.form_class:
-            return self.form_class
-        return modelform_factory(self.get_model())
+    def get_form_class(self):
+        pass
 
     def get_urlpatterns(self):
-        """
-        Returns set of urlconf in standart 'urlpatterns' format
-        """
+        return [] + self.get_urls()
+
+    def get_urls(self):
         return []
 
-    def get_view(self):
-        """
-        Returns comment view object
-        """
-        return CreateCommentView
+    def get_view_class(self):
+        return None
 
     def prepare_object(self, request, form, content_object):
         return None
+
+    def save_comment(self, form):
+        pass
+
+    def before_save(self, form):
+        pass
+
+    def is_need_save(self):
+        pass
+
+
+class PluginBase(AbstractBasePlugin):
+    pass
+
+
+class ThreadPlugin(PluginBase):
+    def get_form_class(self):
+        is_reply = isinstance(self.content_object, self.model)
+
+        if self.request.user.is_authenticated():
+            if is_reply:
+                return CommentReplyAuthenticatedForm
+            else:
+                return CommentReplyAnonymousForm
+        else:
+            if is_reply:
+                return CommentCreateAuthenticatedForm
+            else:
+                return CommentCreateAnonymousForm

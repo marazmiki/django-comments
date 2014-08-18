@@ -13,6 +13,10 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as fp:
     long_description = fp.read()
 
 
+tests_require = ['Django',
+                 'requests',
+                 'six']
+
 setup(name='django-comments',
       version=get_version(),
       author='Mikhail Porokhovnichenko',
@@ -22,9 +26,11 @@ setup(name='django-comments',
       description='Generic pluggable comments application',
       long_description=long_description,
       license='MIT license',
-      requires=['django (>=1.5)',
-                'django-generic-helpers'],
+      requires=['django'],
       packages=find_packages(),
+      test_suite='tests.main',
+      tests_require=tests_require,
+      include_package_data=True,
       classifiers=['Development Status :: 4 - Beta',
                    'Framework :: Django',
                    'Intended Audience :: Developers',

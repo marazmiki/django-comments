@@ -1,3 +1,7 @@
+default: dev_ext $(TARGET)
+
+current_dir = $(shell pwd)
+
 test:
 	python setup.py test
 
@@ -10,4 +14,10 @@ flake8:
 coverage:
 	coverage run --include=django_comments/* setup.py test
 	coverage html
+
+clean:
+	@echo Removing python compiling files
+	@find . -name "*.pyc" -exec rm -rf {} \;
+	@echo Removing package metadata
+	@rm -rf *.egg-info *.egg
 
